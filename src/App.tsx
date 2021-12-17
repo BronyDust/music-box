@@ -2,9 +2,11 @@ import { Component, onCleanup, onMount } from "solid-js";
 import Canvas from "./agents/canvas.class";
 import css from './App.module.css';
 import Renderer from "./renderer";
+import { RenderTree, RenderTreeNode, RenderType } from "./renderer/render-tree.class";
 
 let canvasManager: Canvas | undefined;
 let renderer: Renderer | undefined;
+let renderTree: RenderTree | undefined;
 
 export function getCanvasManager() {
   return canvasManager;
@@ -14,15 +16,16 @@ export function getRenderer() {
   return renderer;
 }
 
+export function getRenderTree() {
+  return renderTree;
+}
+
 /**
  * App entry point
- * 
- * Used to:
- * - place canvas
- * - 
  */
 const App: Component = () => {
   let canvasRef: HTMLCanvasElement | undefined;
+  let lastNode: RenderTreeNode | undefined;
 
   const updateCanvasResolution = () => {
     if (!canvasRef) return;
@@ -33,19 +36,37 @@ const App: Component = () => {
 
     canvasManager?.syncResolution();
     renderer?.provideResolutionToShader();
+  }
 
-    renderer?.renderTriangles([
-      10, 10,
-      width - 10, 10,
-      width / 2, height - 10
+  const addRandomElement = () => {
+    if (!renderTree) return;
+
+    const random = Math.random();
+
+    const node = renderTree.createNode(RenderType.Lines, [
+      0,0,0,1
+    ], [
+      0, 100 * random,
+      100, 100 * random,
     ]);
+
+    if (!renderTree.head || !lastNode) {
+      renderTree.head = node;
+    } else {
+      lastNode.attach(node);
+    }
+
+    lastNode = node;
+
+    renderTree.render();
   }
 
   onMount(() => {
     if (!canvasRef) return;
     canvasManager = new Canvas(canvasRef);
     renderer = new Renderer(canvasManager);
-    renderer.setColor(0,0,255);
+    renderTree = new RenderTree(renderer);
+
     updateCanvasResolution();
 
     window.addEventListener('resize', updateCanvasResolution);
@@ -56,10 +77,9 @@ const App: Component = () => {
     });
   });
 
-
-
   return (
     <>
+      <button class={css.button} onclick={addRandomElement}>ADD</button>
       <canvas class={css.canvas} ref={canvasRef} />
     </>
   );

@@ -33,14 +33,21 @@ const App: Component = () => {
 
     canvasManager?.syncResolution();
     renderer?.provideResolutionToShader();
+
+    renderer?.renderTriangles([
+      10, 10,
+      width - 10, 10,
+      width / 2, height - 10
+    ]);
   }
 
   onMount(() => {
     if (!canvasRef) return;
     canvasManager = new Canvas(canvasRef);
     renderer = new Renderer(canvasManager);
-
+    renderer.setColor(0,0,255);
     updateCanvasResolution();
+
     window.addEventListener('resize', updateCanvasResolution);
 
     onCleanup(() => {

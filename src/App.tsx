@@ -1,11 +1,17 @@
 import { Component, onCleanup, onMount } from "solid-js";
 import Canvas from "./agents/canvas.class";
 import css from './App.module.css';
+import Renderer from "./renderer";
 
 let canvasManager: Canvas | undefined;
+let renderer: Renderer | undefined;
 
 export function getCanvasManager() {
   return canvasManager;
+}
+
+export function getRenderer() {
+  return renderer;
 }
 
 /**
@@ -19,18 +25,20 @@ const App: Component = () => {
   let canvasRef: HTMLCanvasElement | undefined;
 
   const updateCanvasResolution = () => {
-    if (!canvasRef || !canvasManager) return;
+    if (!canvasRef) return;
 
     const { width, height } = canvasRef.getBoundingClientRect();
     canvasRef.width = width;
     canvasRef.height = height;
 
-    canvasManager.syncResolution();
+    canvasManager?.syncResolution();
+    renderer?.provideResolutionToShader();
   }
 
   onMount(() => {
     if (!canvasRef) return;
     canvasManager = new Canvas(canvasRef);
+    renderer = new Renderer(canvasManager);
 
     updateCanvasResolution();
     window.addEventListener('resize', updateCanvasResolution);

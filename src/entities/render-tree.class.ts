@@ -18,19 +18,10 @@ export interface IRenderTreeNode {
 
 class RenderTree {
   private _tree: LinkedList<IRenderTreeNode>;
-  private _renderer: Renderer | null = null;
 
-  constructor() {
+  constructor(private _renderer: Renderer) {
     this.render = this.render.bind(this);
     this._tree = new LinkedList<IRenderTreeNode>(this.render);
-  }
-
-  set renderer(renderer: Renderer | null) {
-    this._renderer = renderer;
-  }
-
-  get renderer() {
-    return this._renderer;
   }
 
   get tree() {
@@ -38,8 +29,6 @@ class RenderTree {
   }
 
   render() {
-    if (!this._renderer) return;
-
     for (const node of this._tree.iterator()) {
       node.render();
 

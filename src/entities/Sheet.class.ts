@@ -8,6 +8,7 @@ class Sheet implements IRenderTreeNode {
   private _lastTransition: TransformMatrixFunction | null = null;
 
   setTransition(transition: (prevMatrix: number[]) => number[]) {
+    if (this._lastTransition) this.matrix = this._lastTransition(this.matrix);
     this._lastTransition = transition;
   }
 

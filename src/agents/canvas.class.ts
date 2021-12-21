@@ -20,7 +20,9 @@ class Canvas {
    * Sync canvas w/h with context viewport
    */
   public syncResolution() {
-    const { width, height } = this.canvas;
+    const { width, height } = this.canvas.getBoundingClientRect();
+    this.canvas.width = width;
+    this.canvas.height = height;
     this.canvasContext.viewport(0, 0, width, height);
   }
 

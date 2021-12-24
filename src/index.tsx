@@ -14,17 +14,22 @@ function initialize() {
   canvasElement.classList.add(css.canvas);
   document.body.appendChild(canvasElement);
 
-  const canvasManager = new Canvas(canvasElement);
-  const renderer = new Renderer(canvasManager);
-
-  canvasManager.syncResolution();
-  renderer.provideResolutionToShader();
-
   const appRoot = document.createElement('div');
   appRoot.classList.add(css.rootElement);
   document.body.appendChild(appRoot);
 
+  const canvasManager = new Canvas(canvasElement);
+  const renderer = new Renderer(canvasManager);
   const renderTree = new RenderTree(renderer);
+
+  const updateFunction = () => {
+    canvasManager.syncResolution();
+    renderer.provideResolutionToShader();
+    renderTree.render();
+  }
+
+  updateFunction();
+  window.addEventListener('resize', updateFunction);
 
   const sheet = new Sheet();
   renderTree.tree.insert(sheet);

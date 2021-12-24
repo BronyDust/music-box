@@ -5,9 +5,7 @@ import App from "./App";
 import RenderTree from "./entities/render-tree.class";
 import Canvas from "./agents/canvas.class";
 import Renderer from "./renderer";
-import Sheet from "./entities/Sheet.class";
-import pageManager from "./agents/page-manager";
-import { LinkedList } from "./abstracts/linked-list.class";
+import PageManager from "./agents/page-manager.class";
 
 export const RenderTreeContext = createContext<RenderTree>(null!);
 
@@ -34,11 +32,7 @@ function initialize() {
   updateFunction();
   window.addEventListener("resize", updateFunction);
 
-  const pageManagerInstance = pageManager(renderTree);
-
-  pageManagerInstance.initSheet?.();
-
-  setTimeout(() => pageManagerInstance.removeSheet?.(), 3000);
+  const pageManager = new PageManager(renderTree);
 
   render(
     () => (

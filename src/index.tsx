@@ -7,7 +7,7 @@ import Canvas from "./agents/canvas.class";
 import Renderer from "./renderer";
 import PageManager from "./agents/page-manager.class";
 
-export const RenderTreeContext = createContext<RenderTree>(null!);
+export const PageManagerContext = createContext<PageManager>(null!);
 
 function initialize() {
   const canvasElement = document.createElement("canvas");
@@ -36,9 +36,9 @@ function initialize() {
 
   render(
     () => (
-      <RenderTreeContext.Provider value={renderTree}>
+      <PageManagerContext.Provider value={pageManager}>
         <App />
-      </RenderTreeContext.Provider>
+      </PageManagerContext.Provider>
     ),
     appRoot,
   );

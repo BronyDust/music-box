@@ -1,21 +1,26 @@
-import { Component } from "solid-js";
-import Canvas from "./agents/canvas.class";
-import Renderer from "./renderer";
-
-let canvasManager: Canvas | undefined;
-let renderer: Renderer | undefined;
-
-export function getCanvasManager() {
-  return canvasManager;
-}
-
-export function getRenderer() {
-  return renderer;
-}
+import { Component, createEffect, createSignal, onCleanup, onMount, useContext } from "solid-js";
+import { PageManagerContext } from ".";
+import { PageManagerState } from "./agents/page-manager.class";
 
 const App: Component = () => {
+  const pageManager = useContext(PageManagerContext);
+  const [getState, setState] = createSignal<PageManagerState>();
+
+  onMount(() => {
+    pageManager.subscribe((e) => {
+      setState(e);
+    });
+
+    // onCleanup(() => pageManager.unsubscribe(setState));
+  });
+
+  console.log(getState());
+
   return (
-    <div>asd</div>
+    <>
+      <button onclick={() => pageManager.initSheet()}>INIT</button>
+      <button onclick={() => pageManager.deleteSheet()}>DELETE</button>
+    </>
   );
 };
 

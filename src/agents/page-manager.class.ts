@@ -31,6 +31,7 @@ class PageManager extends Observer<PageManagerState> {
     if (!this.sheetNode) return;
 
     this.renderTree.tree.deleteNode(this.sheetNode);
+    this.sheetNode = null;
     this.state = PageManagerState.NoSheet;
     this.notify();
   }

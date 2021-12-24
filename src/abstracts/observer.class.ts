@@ -1,7 +1,11 @@
 abstract class Observer<T> {
-  constructor(public state: T) {}
+  constructor(private _state: T) {}
+
+  set state(newState: T) {
+    this._state = newState;
+  }
   
-  public subscribers = new Set<(d: T) => void>();
+  private subscribers = new Set<(d: T) => void>();
 
   public subscribe(observer: (d: T) => void) {
     this.subscribers.add(observer);
@@ -12,7 +16,7 @@ abstract class Observer<T> {
   }
 
   public notify() {
-    this.subscribers.forEach((cb) => cb(this.state));
+    this.subscribers.forEach((cb) => cb(this._state));
   }
 }
 

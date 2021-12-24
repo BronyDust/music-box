@@ -19,7 +19,7 @@ export interface IRenderTreeNode {
 class RenderTree {
   private _tree: LinkedList<IRenderTreeNode>;
 
-  constructor(private _renderer: Renderer) {
+  constructor(private renderer: Renderer, private clear: VoidFunction) {
     this.render = this.render.bind(this);
     this._tree = new LinkedList<IRenderTreeNode>(this.render);
   }
@@ -29,17 +29,19 @@ class RenderTree {
   }
 
   render() {
+    this.clear();
+
     for (const node of this._tree.iterator()) {
       node.render();
 
-      this._renderer.setColor(...node.color);
+      this.renderer.setColor(...node.color);
 
       switch (node.renderType) {
         case RenderType.Line:
-          this._renderer.renderLines(node.matrix);
+          this.renderer.renderLines(node.matrix);
           break;
         case RenderType.Triangle:
-          this._renderer.renderTriangles(node.matrix);
+          this.renderer.renderTriangles(node.matrix);
           break;
       }
     }

@@ -1,9 +1,9 @@
-export class LinkedListNode<T> {
+export class LinkedListNode<T, D extends T = T> {
   public next: LinkedListNode<T> | null = null;
   public prev: LinkedListNode<T> | null = null;
 
   constructor(
-    public value: T,
+    public value: D,
   ) {}
 }
 
@@ -14,7 +14,7 @@ export class LinkedList<T> {
   constructor(private onChange: VoidFunction) {}
 
   /** To head */
-  public insert(data: T): LinkedListNode<T> {
+  public insert<D extends T = T>(data: D): LinkedListNode<T, D> {
     const node = new LinkedListNode(data);
     if (!this.head) {
       this.head = node;
@@ -35,7 +35,7 @@ export class LinkedList<T> {
   }
 
   /** To tail */
-  public append(data: T): LinkedListNode<T> {
+  public append<D extends T = T>(data: D): LinkedListNode<T, D> {
     const node = new LinkedListNode(data);
     if (!this.head) {
       this.head = node;
@@ -50,12 +50,12 @@ export class LinkedList<T> {
       lastNode.next = node;
     }
 
-    this.onChange();
     this._size++;
+    this.onChange();
     return node;
   }
 
-  public deleteNode(node: LinkedListNode<T>): void {
+  public deleteNode<D extends T = T>(node: LinkedListNode<T, D>): void {
     if (!node.prev) {
       this.head = node.next;
     } else {

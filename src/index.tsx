@@ -27,7 +27,7 @@ function initialize() {
   const renderTree = new RenderTree(renderer);
 
   const sheet = new Sheet();
-  renderTree.tree.appendToStart(sheet);
+  renderTree.tree.insert(sheet);
 
   render(
     () => (

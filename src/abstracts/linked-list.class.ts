@@ -1,54 +1,74 @@
 export class LinkedListNode<T> {
-  constructor(public value: T, public next: LinkedListNode<T> | null = null ) {}
+  public next: LinkedListNode<T> | null = null;
+  public prev: LinkedListNode<T> | null = null;
+
+  constructor(
+    public value: T,
+  ) {}
 }
 
 export class LinkedList<T> {
-  private _head: LinkedListNode<T> | null = null;
+  private head: LinkedListNode<T> | null = null;
   private _size = 0;
 
-  constructor(private _onChange?: VoidFunction) {}
+  constructor(private onChange: VoidFunction) {}
 
-  get head() {
-    return this._head;
+  /** To head */
+  public insert(data: T): LinkedListNode<T> {
+    const node = new LinkedListNode(data);
+    if (!this.head) {
+      this.head = node;
+    } else {
+      this.head.prev = node;
+      node.next = this.head;
+      this.head = node;
+    }
+
+    this._size++;
+    this.onChange();
+
+    return node;
   }
 
   get size() {
     return this._size;
   }
 
-  appendToStart(value: T) {
-    this._size++;
-    const node = new LinkedListNode(value);
-    node.next = this._head;
-    this._head = node;
-    this._onChange?.();
-  }
+  /** To tail */
+  public append(data: T): LinkedListNode<T> {
+    const node = new LinkedListNode(data);
+    if (!this.head) {
+      this.head = node;
+    } else {
+      let lastNode = this.head;
 
-  remove(value: T) {
-    if (!this._head) return;
-
-    if (this._head.value === value) {
-      this._head = this._head.next;
-      this._size--;
-      this._onChange?.();
-      return;
-    }
-
-    let current = this._head;
-    while (current.next) {
-      if (current.next.value === value) {
-        current.next = current.next.next;
-        this._size--;
-        this._onChange?.();
-        return;
+      while(lastNode.next) {
+        lastNode = lastNode.next;
       }
 
-      current = current.next;
+      node.prev = lastNode;
+      lastNode.next = node;
     }
+
+    this.onChange();
+    this._size++;
+    return node;
+  }
+
+  public deleteNode(node: LinkedListNode<T>): void {
+    if (!node.prev) {
+      this.head = node.next;
+    } else {
+      const prevNode = node.prev;
+      prevNode.next = node.next;
+    }
+
+    this._size--;
+    this.onChange();
   }
 
   *iterator() {
-    let current = this._head;
+    let current = this.head;
 
     while (current) {
       yield current.value;

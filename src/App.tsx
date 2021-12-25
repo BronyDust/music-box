@@ -10,6 +10,7 @@ import {
 import { PageManagerContext } from ".";
 import { PageManagerState } from "./agents/page-manager.class";
 import Button from "./components/atoms/Button";
+import Card from "./components/atoms/Card";
 import Overlap from "./components/atoms/Overlap";
 
 const App: Component = () => {
@@ -27,7 +28,9 @@ const App: Component = () => {
       <Switch>
         <Match when={getState() === PageManagerState.NoSheet}>
           <Button>adg</Button>
-          <Overlap>eg</Overlap>
+          <Overlap>
+            <Card>sdg</Card>
+          </Overlap>
         </Match>
       </Switch>
     </>

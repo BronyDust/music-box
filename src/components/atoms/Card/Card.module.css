@@ -1,0 +1,4 @@
+.card {
+  background: var(--controller);
+  padding: 15px;
+}

@@ -1,4 +1,4 @@
-.palette {
+.palette:not(:empty) {
   display: flex;
   overflow-x: auto;
   position: fixed;
@@ -7,4 +7,13 @@
   left: 10px;
   width: calc(100% - 20px);
   box-shadow: 0 5px 10px -5px rgba(0, 0, 0, 0.3);
+  padding: 10px;
+}
+
+.palette:empty {
+  display: none;
+}
+
+.palette_section_title {
+  margin-bottom: 10px;
 }

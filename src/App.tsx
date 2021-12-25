@@ -32,7 +32,14 @@ const App: Component = () => {
     <CommandPalette>
       <Switch>
         <Match when={getState() === PageManagerState.NoSheet}>
-          
+          <CommandPalette.Section title="Страница">
+            <Button onClick={() => pageManager.initSheet()}>Создать</Button>
+          </CommandPalette.Section>
+        </Match>
+        <Match when={getState() === PageManagerState.Sheet}>
+          <CommandPalette.Section title="Страница">
+            <Button onClick={() => pageManager.deleteSheet()}>Удалить</Button>
+          </CommandPalette.Section>
         </Match>
       </Switch>
     </CommandPalette>

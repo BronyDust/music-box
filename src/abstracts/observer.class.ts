@@ -4,6 +4,10 @@ abstract class Observer<T> {
   set state(newState: T) {
     this._state = newState;
   }
+
+  get state() {
+    return this._state;
+  }
   
   private subscribers = new Set<(d: T) => void>();
 

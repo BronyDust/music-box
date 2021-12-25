@@ -1,0 +1,16 @@
+.button {
+  background: var(--controller);
+  color: var(--controller-opposite);
+  border: none;
+  padding: 10px 15px;
+  min-width: 100px;
+  transition: 0.1s ease-out;
+  box-shadow: 0 5px 10px -5px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+.button:hover,
+.button:active,
+.button:focus {
+  box-shadow: 0 4px 8px -5px rgba(0, 0, 0, 0.3);
+}

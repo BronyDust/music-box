@@ -9,6 +9,7 @@ import {
 } from "solid-js";
 import { PageManagerContext } from ".";
 import { PageManagerState } from "./agents/page-manager.class";
+import Button from "./components/atoms/Button";
 
 const App: Component = () => {
   const pageManager = useContext(PageManagerContext);
@@ -21,11 +22,13 @@ const App: Component = () => {
   });
 
   return (
-    <Switch>
-      <Match when={getState() === PageManagerState.NoSheet}>
-        ag
-      </Match>
-    </Switch>
+    <>
+      <Switch>
+        <Match when={getState() === PageManagerState.NoSheet}>
+          <Button>adg</Button>
+        </Match>
+      </Switch>
+    </>
   );
 };
 

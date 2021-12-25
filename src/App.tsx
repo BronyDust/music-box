@@ -13,11 +13,14 @@ import Button from "./components/atoms/Button";
 import Card from "./components/atoms/Card";
 import Overlap from "./components/atoms/Overlap";
 import Typography from "./components/atoms/Typography";
+import CommandPalette from "./components/molecules/CommandPalette";
 import ModalLayout from "./components/molecules/ModalLayout";
 
 const App: Component = () => {
   const pageManager = useContext(PageManagerContext);
-  const [getState, setState] = createSignal<PageManagerState>(pageManager.state);
+  const [getState, setState] = createSignal<PageManagerState>(
+    pageManager.state,
+  );
 
   onMount(() => {
     pageManager.subscribe(setState);
@@ -26,18 +29,13 @@ const App: Component = () => {
   });
 
   return (
-    <>
+    <CommandPalette>
       <Switch>
         <Match when={getState() === PageManagerState.NoSheet}>
-          <Button>adg</Button>
-          <Overlap>
-            <ModalLayout title="Страница пуста" actionTitle="Создать" action={() => pageManager.initSheet()}>
-              Сейчас на странице нет партитуры. Создать ее?
-            </ModalLayout>
-          </Overlap>
+          
         </Match>
       </Switch>
-    </>
+    </CommandPalette>
   );
 };
 

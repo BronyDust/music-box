@@ -1,15 +1,19 @@
 lockfileVersion: 5.3
 
 specifiers:
+  bootstrap-icons: ^1.7.2
+  rollup-plugin-string: ^3.0.0
   solid-js: ^1.2.6
   typescript: ^4.5.3
   vite: ^2.7.1
   vite-plugin-solid: ^2.1.4
 
 dependencies:
+  bootstrap-icons: 1.7.2
   solid-js: 1.2.6
 
 devDependencies:
+  rollup-plugin-string: 3.0.0
   typescript: 4.5.3
   vite: 2.7.1
   vite-plugin-solid: 2.1.4
@@ -332,6 +336,11 @@ packages:
       - '@babel/core'
     dev: true
 
+  /bootstrap-icons/1.7.2:
+    resolution: {integrity: sha512-NiR2PqC73AQOPdVSu6GJfnk+hN2z6powcistXk1JgPnKuoV2FSdSl26w931Oz9HYbKCcKUSB6ncZTYJAYJl3QQ==}
+    engines: {node: '>=10'}
+    dev: false
+
   /browserslist/4.18.1:
     resolution: {integrity: sha512-8ScCzdpPwR2wQh8IT82CA2VgDwjHyqMovPBZSNH54+tm4Jk2pCuv90gmAdH6J84OCRWi0b4gMe6O6XPXuJnjgQ==}
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
@@ -559,6 +568,10 @@ packages:
     engines: {node: '>=0.8.0'}
     dev: true
 
+  /estree-walker/0.6.1:
+    resolution: {integrity: sha512-SqmZANLWS0mnatqbSfRP5g8OXZC12Fgg1IwNtLsyHDzJizORW4khDfjPqJZsemPWBB2uqykUah5YpQ6epsqC/w==}
+    dev: true
+
   /fsevents/2.3.2:
     resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
@@ -672,6 +685,18 @@ packages:
     dependencies:
       is-core-module: 2.8.0
       path-parse: 1.0.7
+    dev: true
+
+  /rollup-plugin-string/3.0.0:
+    resolution: {integrity: sha512-vqyzgn9QefAgeKi+Y4A7jETeIAU1zQmS6VotH6bzm/zmUQEnYkpIGRaOBPY41oiWYV4JyBoGAaBjYMYuv+6wVw==}
+    dependencies:
+      rollup-pluginutils: 2.8.2
+    dev: true
+
+  /rollup-pluginutils/2.8.2:
+    resolution: {integrity: sha512-EEp9NhnUkwY8aif6bxgovPHMoMoNr2FulJziTndpt5H9RdwC47GSGuII9XxpSdzVGM0GWrNPHV6ie1LTNJPaLQ==}
+    dependencies:
+      estree-walker: 0.6.1
     dev: true
 
   /rollup/2.61.0:

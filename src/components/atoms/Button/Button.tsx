@@ -1,9 +1,16 @@
 import { Component } from "solid-js";
 import css from './Button.module.css';
 
-const Button: Component = (props) => {
+interface ButtonProps {
+  primary?: boolean;
+}
+
+const Button: Component<ButtonProps> = (props) => {
   return (
-    <button class={css.button}>{props.children}</button>
+    <button classList={{
+      [css.button]: true,
+      [css.primary]: props.primary
+    }}>{props.children}</button>
   )
 };
 

@@ -1,34 +1,27 @@
 .mega {
   font-size: 68px;
-  font-weight: 600;
 }
 
 .xxlarge {
   font-size: 28px;
-  font-weight: 600;
 }
 
 .xlarge {
   font-size: 20px;
-  font-weight: 600;
 }
 
 .large {
   font-size: 18px;
-  font-weight: 400;
 }
 
 .medium {
   font-size: 14px;
-  font-weight: 400;
 }
 
 .small {
   font-size: 12px;
-  font-weight: 400;
 }
 
 .tiny {
   font-size: 10px;
-  font-weight: 400;
 }

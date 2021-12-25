@@ -9,6 +9,11 @@
   cursor: pointer;
 }
 
+.button.primary {
+  background: var(--accent);
+  color: var(--accent-opposite);
+}
+
 .button:hover,
 .button:active,
 .button:focus {

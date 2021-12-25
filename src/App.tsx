@@ -13,6 +13,7 @@ import Button from "./components/atoms/Button";
 import Card from "./components/atoms/Card";
 import Overlap from "./components/atoms/Overlap";
 import Typography from "./components/atoms/Typography";
+import ModalLayout from "./components/molecules/ModalLayout";
 
 const App: Component = () => {
   const pageManager = useContext(PageManagerContext);
@@ -30,9 +31,9 @@ const App: Component = () => {
         <Match when={getState() === PageManagerState.NoSheet}>
           <Button>adg</Button>
           <Overlap>
-            <Card>
-              <Typography size="mega">adhsfdg</Typography>
-            </Card>
+            <ModalLayout title="Страница пуста" actionTitle="Создать" action={() => pageManager.initSheet()}>
+              Сейчас на странице нет партитуры. Создать ее?
+            </ModalLayout>
           </Overlap>
         </Match>
       </Switch>

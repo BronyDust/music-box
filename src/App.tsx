@@ -1,3 +1,4 @@
+import { BsPlusCircle, BsTrash } from "solid-icons/bs";
 import {
   Component,
   createSignal,
@@ -27,18 +28,16 @@ const App: Component = () => {
 
   return (
     <CommandPalette>
-      <Switch>
-        <Match when={getState() === PageManagerState.NoSheet}>
-          <CommandPaletteSection title="Страница">
-            <Button onClick={() => pageManager.initSheet()}>Создать</Button>
-          </CommandPaletteSection>
-        </Match>
-        <Match when={getState() === PageManagerState.Sheet}>
-          <CommandPaletteSection title="Страница">
-            <Button onClick={() => pageManager.deleteSheet()}>Удалить</Button>
-          </CommandPaletteSection>
-        </Match>
-      </Switch>
+      <CommandPaletteSection title="Страница">
+        <Switch>
+          <Match when={getState() === PageManagerState.NoSheet}>
+            <Button suffix={<BsPlusCircle />} onClick={() => pageManager.initSheet()}>Создать</Button>
+          </Match>
+          <Match when={getState() === PageManagerState.Sheet}>
+            <Button suffix={<BsTrash />} onClick={() => pageManager.deleteSheet()}>Удалить</Button>
+          </Match>
+        </Switch>
+      </CommandPaletteSection>
     </CommandPalette>
   );
 };

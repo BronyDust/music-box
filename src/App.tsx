@@ -10,11 +10,8 @@ import {
 import { PageManagerContext } from ".";
 import { PageManagerState } from "./agents/page-manager.class";
 import Button from "./components/atoms/Button";
-import Card from "./components/atoms/Card";
-import Overlap from "./components/atoms/Overlap";
-import Typography from "./components/atoms/Typography";
 import CommandPalette from "./components/molecules/CommandPalette";
-import ModalLayout from "./components/molecules/ModalLayout";
+import { CommandPaletteSection } from "./components/molecules/CommandPalette/CommandPalette";
 
 const App: Component = () => {
   const pageManager = useContext(PageManagerContext);
@@ -32,14 +29,14 @@ const App: Component = () => {
     <CommandPalette>
       <Switch>
         <Match when={getState() === PageManagerState.NoSheet}>
-          <CommandPalette.Section title="Страница">
+          <CommandPaletteSection title="Страница">
             <Button onClick={() => pageManager.initSheet()}>Создать</Button>
-          </CommandPalette.Section>
+          </CommandPaletteSection>
         </Match>
         <Match when={getState() === PageManagerState.Sheet}>
-          <CommandPalette.Section title="Страница">
+          <CommandPaletteSection title="Страница">
             <Button onClick={() => pageManager.deleteSheet()}>Удалить</Button>
-          </CommandPalette.Section>
+          </CommandPaletteSection>
         </Match>
       </Switch>
     </CommandPalette>

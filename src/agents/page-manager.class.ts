@@ -2,17 +2,20 @@ import { LinkedListNode } from "../abstracts/linked-list.class";
 import Observer from "../abstracts/observer.class";
 import RenderTree, { IRenderTreeNode } from "../entities/render-tree.class";
 import Sheet from "../entities/sheet.class";
+import Staff from "../entities/staff.class";
 
 /**
  * Ordered enum
  */
 export enum PageManagerState {
   NoSheet,
-  Sheet
+  Sheet,
 }
 
 class PageManager extends Observer<PageManagerState> {
   private sheetNode: LinkedListNode<IRenderTreeNode, Sheet> | null = null;
+  private sheetFilledSpace = 0;
+  private pageStaffs = new Set<Staff>();
 
   constructor(private renderTree: RenderTree) {
     super(PageManagerState.NoSheet);
@@ -22,7 +25,8 @@ class PageManager extends Observer<PageManagerState> {
     if (this.sheetNode) return;
 
     const sheet = new Sheet();
-    this.sheetNode = this.renderTree.tree.insert(sheet);
+    this.sheetFilledSpace = sheet.margins.top;
+    this.sheetNode = this.renderTree.tree.append(sheet);
     this.state = PageManagerState.Sheet;
     this.notify();
   }
@@ -38,9 +42,21 @@ class PageManager extends Observer<PageManagerState> {
 
   public createStaff() {
     if (!this.sheetNode) return;
+    const sheet = this.sheetNode.value;
 
-    const staff = this.sheetNode.value.createStaff();
-    this.renderTree.tree.insert(staff);
+    const { bottom, left, right } = sheet.margins;
+    if (this.sheetFilledSpace + bottom + 8 >= sheet.height) return;
+
+    const { width } = sheet;
+
+    const staff = new Staff(
+      [left, this.sheetFilledSpace],
+      [width - right, this.sheetFilledSpace + 8],
+      [6.5, 6.5],
+    );
+    this.renderTree.tree.append(staff);
+    this.sheetFilledSpace += staff.height;
+
     this.notify();
   }
 }

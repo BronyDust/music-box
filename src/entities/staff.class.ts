@@ -1,4 +1,8 @@
-import { IRenderTreeNode, RenderType, TransformMatrixFunction } from "./render-tree.class";
+import {
+  IRenderTreeNode,
+  RenderType,
+  TransformMatrixFunction,
+} from "./render-tree.class";
 
 class Staff implements IRenderTreeNode {
   matrix: number[];
@@ -6,44 +10,52 @@ class Staff implements IRenderTreeNode {
   color: [number, number, number, number] = [0, 0, 0, 1];
   height: number;
 
-  constructor(zeroPoint: [number, number], lastPoint: [number, number]) {
+  constructor(
+    zeroPoint: [number, number],
+    lastPoint: [number, number],
+    margin: [number, number],
+  ) {
+    const [top, bottom] = margin;
     const [zx, zy] = zeroPoint;
     const [lx, ly] = lastPoint;
-    this.height = ly - zy;
-    const gap = this.height / 5;
+    this.height = ly - zy + top + bottom;
+    const gap = (ly - zy) / 5;
+
+    const zyMargined = zy + top;
 
     this.matrix = [
       zx,
-      zy,
+      zyMargined,
       lx,
-      zy,
+      zyMargined,
       zx,
-      zy + gap,
+      zyMargined + gap,
       lx,
-      zy + gap,
+      zyMargined + gap,
       zx,
-      zy + gap * 2,
+      zyMargined + gap * 2,
       lx,
-      zy + gap * 2,
+      zyMargined + gap * 2,
       zx,
-      zy + gap * 3,
+      zyMargined + gap * 3,
       lx,
-      zy + gap * 3,
+      zyMargined + gap * 3,
       zx,
-      zy + gap * 4,
+      zyMargined + gap * 4,
       lx,
-      zy + gap * 4,
+      zyMargined + gap * 4,
       zx,
-      zy + gap * 5,
+      zyMargined + gap * 5,
       lx,
-      zy + gap * 5,
+      zyMargined + gap * 5,
     ];
   }
 
   private _lastTransition: TransformMatrixFunction | null = null;
 
-  setTransition(transition: (prevMatrix: number[]) => number[]) {
-    if (this._lastTransition) this.matrix = this._lastTransition(this.matrix);
+  setTransition(transition: (prevMatrix: number[]) => number[], force?: true) {
+    if (this._lastTransition && !force)
+      this.matrix = this._lastTransition(this.matrix);
     this._lastTransition = transition;
   }
 

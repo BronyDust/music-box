@@ -9,6 +9,8 @@ export class LinkedListNode<T, D extends T = T> {
 
 export class LinkedList<T> {
   private head: LinkedListNode<T> | null = null;
+  private tail: LinkedListNode<T> | null = null;
+
   private _size = 0;
 
   constructor(private onChange: VoidFunction) {}
@@ -16,8 +18,9 @@ export class LinkedList<T> {
   /** To head */
   public insert<D extends T = T>(data: D): LinkedListNode<T, D> {
     const node = new LinkedListNode(data);
-    if (!this.head) {
+    if (!this.head || !this.tail) {
       this.head = node;
+      this.tail = node;
     } else {
       this.head.prev = node;
       node.next = this.head;
@@ -37,17 +40,13 @@ export class LinkedList<T> {
   /** To tail */
   public append<D extends T = T>(data: D): LinkedListNode<T, D> {
     const node = new LinkedListNode(data);
-    if (!this.head) {
+    if (!this.head || !this.tail) {
       this.head = node;
+      this.tail = node;
     } else {
-      let lastNode = this.head;
-
-      while(lastNode.next) {
-        lastNode = lastNode.next;
-      }
-
-      node.prev = lastNode;
-      lastNode.next = node;
+      this.tail.next = node;
+      node.prev = this.tail;
+      this.tail = node;
     }
 
     this._size++;
@@ -56,11 +55,20 @@ export class LinkedList<T> {
   }
 
   public deleteNode<D extends T = T>(node: LinkedListNode<T, D>): void {
-    if (!node.prev) {
+    if (node === this.head) {
       this.head = node.next;
+      node.next = null;
+    } else if (node === this.tail) {
+      this.tail = node.prev;
+      node.prev = null;
     } else {
-      const prevNode = node.prev;
-      prevNode.next = node.next;
+      const left = node.prev;
+      const right = node.next;
+      if (left) left.next = right;
+      if (right) right.prev = left;
+
+      node.prev = null;
+      node.next = null;
     }
 
     this._size--;
@@ -73,6 +81,15 @@ export class LinkedList<T> {
     while (current) {
       yield current.value;
       current = current.next;
+    }
+  }
+
+  *iteratorReversed() {
+    let current = this.tail;
+
+    while (current) {
+      yield current.value;
+      current = current.prev;
     }
   }
 }

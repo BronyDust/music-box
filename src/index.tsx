@@ -6,6 +6,7 @@ import RenderTree from "./entities/render-tree.class";
 import Canvas from "./agents/canvas.class";
 import Renderer from "./renderer";
 import PageManager from "./agents/page-manager.class";
+import Staff from "./entities/staff.class";
 
 export const PageManagerContext = createContext<PageManager>(null!);
 
@@ -33,6 +34,7 @@ function initialize() {
   window.addEventListener("resize", updateFunction);
 
   const pageManager = new PageManager(renderTree);
+  pageManager.initSheet();
 
   render(
     () => (

@@ -28,15 +28,8 @@ const App: Component = () => {
 
   return (
     <CommandPalette>
-      <CommandPaletteSection title="Страница">
-        <Switch>
-          <Match when={getState() === PageManagerState.NoSheet}>
-            <Button suffix={<BsPlusCircle />} onClick={() => pageManager.initSheet()}>Создать</Button>
-          </Match>
-          <Match when={getState() === PageManagerState.Sheet}>
-            <Button suffix={<BsTrash />} onClick={() => pageManager.deleteSheet()}>Удалить</Button>
-          </Match>
-        </Switch>
+      <CommandPaletteSection title="Нотный стан">
+        <Button suffix={<BsPlusCircle />} onClick={() => pageManager.createStaff()}>Добавить</Button>
       </CommandPaletteSection>
     </CommandPalette>
   );

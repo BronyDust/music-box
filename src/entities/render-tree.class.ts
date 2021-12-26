@@ -31,7 +31,7 @@ class RenderTree {
   render() {
     this.clear();
 
-    for (const node of this._tree.iterator()) {
+    for (const node of this._tree.iteratorReversed()) {
       node.render();
 
       this.renderer.setColor(...node.color);

@@ -1,7 +1,7 @@
 import { LinkedListNode } from "../abstracts/linked-list.class";
 import Observer from "../abstracts/observer.class";
 import RenderTree, { IRenderTreeNode } from "../entities/render-tree.class";
-import Sheet from "../entities/Sheet.class";
+import Sheet from "../entities/sheet.class";
 
 /**
  * Ordered enum
@@ -33,6 +33,14 @@ class PageManager extends Observer<PageManagerState> {
     this.renderTree.tree.deleteNode(this.sheetNode);
     this.sheetNode = null;
     this.state = PageManagerState.NoSheet;
+    this.notify();
+  }
+
+  public createStaff() {
+    if (!this.sheetNode) return;
+
+    const staff = this.sheetNode.value.createStaff();
+    this.renderTree.tree.insert(staff);
     this.notify();
   }
 }

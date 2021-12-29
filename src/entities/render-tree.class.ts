@@ -1,5 +1,6 @@
 import { LinkedList } from "../abstracts/linked-list.class";
 import Renderer from "../renderer";
+import RenderTreeNode from "./render-tree-node.abstract";
 
 export enum RenderType {
   Line,
@@ -8,20 +9,12 @@ export enum RenderType {
 
 export type TransformMatrixFunction = (prevMatrix: number[]) => number[];
 
-export interface IRenderTreeNode {
-  renderType: RenderType;
-  matrix: number[];
-  color: [number, number, number, number];
-  setTransition: (transition: TransformMatrixFunction) => void;
-  render(): void;
-}
-
 class RenderTree {
-  private _tree: LinkedList<IRenderTreeNode>;
+  private _tree: LinkedList<RenderTreeNode>;
 
   constructor(private renderer: Renderer, private clear: VoidFunction) {
     this.render = this.render.bind(this);
-    this._tree = new LinkedList<IRenderTreeNode>(this.render);
+    this._tree = new LinkedList<RenderTreeNode>(this.render);
   }
 
   get tree() {

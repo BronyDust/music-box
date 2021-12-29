@@ -20,14 +20,13 @@ class StandManipulator {
   private isDraggingStart = false;
 
   constructor(canvasElement: HTMLCanvasElement) {
-    canvasElement.addEventListener('pointerdown', () => {
+    canvasElement.addEventListener('pointerdown', (event) => {
+      event.preventDefault();
       this.isDraggingStart = true;
-      console.log(this.isDraggingStart);
     });
 
     const endDragging = () => {
       this.isDraggingStart = false;
-      console.log(this.isDraggingStart);
     };
 
     canvasElement.addEventListener('pointerup', endDragging);
@@ -35,8 +34,9 @@ class StandManipulator {
     canvasElement.addEventListener('pointerleave', endDragging);
 
     canvasElement.addEventListener('pointermove', (event) => {
-      if (!this.isDraggingStart) return;
       event.preventDefault();
+      if (!this.isDraggingStart) return;
+      
 
       this.translate(event.movementX, event.movementY);
     });

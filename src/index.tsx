@@ -22,24 +22,29 @@ function initialize() {
 
   const canvasManager = new Canvas(canvasElement);
   const renderer = new Renderer(canvasManager);
-  const standManipulator = new StandManipulator();
+  const standManipulator = new StandManipulator(canvasElement);
   const renderTree = new RenderTree(
     renderer,
     () => canvasManager.clear(),
-    standManipulator,
   );
 
   const updateFunction = () => {
     canvasManager.clear();
     canvasManager.syncResolution();
     renderer.provideResolutionToShader();
+    renderer.setTranslation(standManipulator.transformMatrix);
+    renderTree.render();
+  };
+
+  standManipulator.renderFunction = () => {
+    renderer.setTranslation(standManipulator.transformMatrix);
     renderTree.render();
   };
 
   updateFunction();
   window.addEventListener("resize", updateFunction);
 
-  const pageManager = new PageManager(renderTree, standManipulator);
+  const pageManager = new PageManager(renderTree);
   pageManager.initSheet();
 
   render(

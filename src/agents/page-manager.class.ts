@@ -14,28 +14,12 @@ export enum PageManagerState {
   Sheet,
 }
 
-function debounce(cb: VoidFunction, cd: number) {
-  let timeout: number | null = null;
-
-  return function run() {
-    const unAllocTimeout = () => {
-      timeout = null;
-    }
-
-    const callNow = !timeout;
-    
-    if (timeout !== null) clearTimeout(timeout);
-    timeout = setTimeout(unAllocTimeout, cd);
-    if (callNow) cb();
-  }
-}
-
 class PageManager extends Observer<PageManagerState> {
   private sheetNode: LinkedListNode<RenderTreeNode, Sheet> | null = null;
   private sheetFilledSpace = 0;
   private pageStaffs = new Set<Staff>();
 
-  constructor(private renderTree: RenderTree, private standManipulator: StandManipulator) {
+  constructor(private renderTree: RenderTree) {
     super(PageManagerState.NoSheet);
   }
 
@@ -76,11 +60,6 @@ class PageManager extends Observer<PageManagerState> {
     this.sheetFilledSpace += staff.height;
 
     this.notify();
-  }
-
-  public transform(changeX = 0, changeY = 0) {
-    this.standManipulator.translate(changeX, changeY);
-    debounce(this.renderTree.render, 400);
   }
 }
 

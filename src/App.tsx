@@ -1,11 +1,9 @@
-import { BsPlusCircle, BsTrash } from "solid-icons/bs";
+import { BsPlusCircle } from "solid-icons/bs";
 import {
   Component,
   createSignal,
-  Match,
   onCleanup,
   onMount,
-  Switch,
   useContext,
 } from "solid-js";
 import { PageManagerContext } from ".";

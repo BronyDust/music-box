@@ -1,7 +1,6 @@
 import { LinkedList } from "../abstracts/linked-list.class";
 import Renderer from "../renderer";
 import RenderTreeNode from "./render-tree-node.abstract";
-import StandManipulator from "./stand-manipulator.class";
 
 export enum RenderType {
   Line,
@@ -16,7 +15,6 @@ class RenderTree {
   constructor(
     private renderer: Renderer,
     private clear: VoidFunction,
-    private standManipulator: StandManipulator,
   ) {
     this.render = this.render.bind(this);
     this._tree = new LinkedList<RenderTreeNode>(this.render);
@@ -28,7 +26,6 @@ class RenderTree {
 
   public render() {
     this.clear();
-    this.renderer.setTranslation(this.standManipulator.transformMatrix);
 
     for (const node of this._tree.iterator()) {
       node.render();

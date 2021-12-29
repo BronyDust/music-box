@@ -1,8 +1,10 @@
 import { LinkedListNode } from "../abstracts/linked-list.class";
 import Observer from "../abstracts/observer.class";
-import RenderTree, { IRenderTreeNode } from "../entities/render-tree.class";
+import RenderTreeNode from "../entities/render-tree-node.abstract";
+import RenderTree from "../entities/render-tree.class";
 import Sheet from "../entities/sheet.class";
 import Staff from "../entities/staff.class";
+import StandManipulator from "../entities/stand-manipulator.class";
 
 /**
  * Ordered enum
@@ -12,12 +14,28 @@ export enum PageManagerState {
   Sheet,
 }
 
+function debounce(cb: VoidFunction, cd: number) {
+  let timeout: number | null = null;
+
+  return function run() {
+    const unAllocTimeout = () => {
+      timeout = null;
+    }
+
+    const callNow = !timeout;
+    
+    if (timeout !== null) clearTimeout(timeout);
+    timeout = setTimeout(unAllocTimeout, cd);
+    if (callNow) cb();
+  }
+}
+
 class PageManager extends Observer<PageManagerState> {
-  private sheetNode: LinkedListNode<IRenderTreeNode, Sheet> | null = null;
+  private sheetNode: LinkedListNode<RenderTreeNode, Sheet> | null = null;
   private sheetFilledSpace = 0;
   private pageStaffs = new Set<Staff>();
 
-  constructor(private renderTree: RenderTree) {
+  constructor(private renderTree: RenderTree, private standManipulator: StandManipulator) {
     super(PageManagerState.NoSheet);
   }
 
@@ -58,6 +76,11 @@ class PageManager extends Observer<PageManagerState> {
     this.sheetFilledSpace += staff.height;
 
     this.notify();
+  }
+
+  public transform(changeX = 0, changeY = 0) {
+    this.standManipulator.translate(changeX, changeY);
+    debounce(this.renderTree.render, 400);
   }
 }
 

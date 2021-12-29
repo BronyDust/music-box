@@ -8,6 +8,7 @@ class Renderer {
   private positionAttributeLocation: number;
   private resolutionUniformLocation: WebGLUniformLocation;
   private colorUniformLocation: WebGLUniformLocation;
+  private translateUniformLocation: WebGLUniformLocation;
 
   /**
    * Fill buffer data
@@ -18,11 +19,7 @@ class Renderer {
     matrix: Float32Array,
     hint = this.canvas.gl.STATIC_DRAW,
   ) {
-    this.canvas.gl.bufferData(
-      this.canvas.gl.ARRAY_BUFFER,
-      matrix,
-      hint,
-    );
+    this.canvas.gl.bufferData(this.canvas.gl.ARRAY_BUFFER, matrix, hint);
   }
 
   constructor(private canvas: Canvas) {
@@ -55,6 +52,13 @@ class Renderer {
     if (!resolutionUniformLocation)
       throw new Error('FATAL: cannot find "user_resolution" uniform location');
     this.resolutionUniformLocation = resolutionUniformLocation;
+    const translateUniformLocation = canvas.gl.getUniformLocation(
+      program,
+      "user_translation",
+    );
+    if (!translateUniformLocation)
+      throw new Error('FATAL: cannot find "user_translation" uniform location');
+    this.translateUniformLocation = translateUniformLocation;
     const colorUniformLocation = canvas.gl.getUniformLocation(
       program,
       "user_color",
@@ -119,32 +123,48 @@ class Renderer {
     );
   }
 
+  public setTranslation(translate: [number, number]) {
+    this.canvas.gl.uniform2fv(this.translateUniformLocation, translate);
+  }
+
   public renderTriangles(coords: number[]) {
-		const typedMatrix = new Float32Array(coords);
-		if (typedMatrix.length % 2) throw new Error('FATAL: triangle cannot be rendered. Check coordinates array');
-
-    const points = typedMatrix.length / 2;
-		if (points % 3) throw new Error('FATAL: triangles cannot be rendered. Some of triangles have not enough points');
-
-		this.setBufferData(typedMatrix);
-
-		const primitiveType = this.canvas.gl.TRIANGLES;
-		const primitiveOffset = 0;
-		this.canvas.gl.drawArrays(primitiveType, primitiveOffset, points);
-	}
-
-  public renderLines(coords: number[]) {
     const typedMatrix = new Float32Array(coords);
-    if (typedMatrix.length % 2) throw new Error('FATAL: lines cannot be rendered. Check coordinates array');
+    if (typedMatrix.length % 2)
+      throw new Error(
+        "FATAL: triangle cannot be rendered. Check coordinates array",
+      );
 
     const points = typedMatrix.length / 2;
-		if (points % 2) throw new Error('FATAL: lines cannot be rendered. Some of lines have not enough points');
+    if (points % 3)
+      throw new Error(
+        "FATAL: triangles cannot be rendered. Some of triangles have not enough points",
+      );
 
     this.setBufferData(typedMatrix);
 
-		const primitiveType = this.canvas.gl.LINES;
-		const primitiveOffset = 0;
-		this.canvas.gl.drawArrays(primitiveType, primitiveOffset, points);
+    const primitiveType = this.canvas.gl.TRIANGLES;
+    const primitiveOffset = 0;
+    this.canvas.gl.drawArrays(primitiveType, primitiveOffset, points);
+  }
+
+  public renderLines(coords: number[]) {
+    const typedMatrix = new Float32Array(coords);
+    if (typedMatrix.length % 2)
+      throw new Error(
+        "FATAL: lines cannot be rendered. Check coordinates array",
+      );
+
+    const points = typedMatrix.length / 2;
+    if (points % 2)
+      throw new Error(
+        "FATAL: lines cannot be rendered. Some of lines have not enough points",
+      );
+
+    this.setBufferData(typedMatrix);
+
+    const primitiveType = this.canvas.gl.LINES;
+    const primitiveOffset = 0;
+    this.canvas.gl.drawArrays(primitiveType, primitiveOffset, points);
   }
 }
 

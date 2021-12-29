@@ -6,8 +6,10 @@ import RenderTree from "./entities/render-tree.class";
 import Canvas from "./agents/canvas.class";
 import Renderer from "./renderer";
 import PageManager from "./agents/page-manager.class";
+import StandManipulator from "./entities/stand-manipulator.class";
 
 export const PageManagerContext = createContext<PageManager>(null!);
+export const StandManipulatorContext = createContext<StandManipulator>(null!);
 
 function initialize() {
   const canvasElement = document.createElement("canvas");
@@ -20,7 +22,12 @@ function initialize() {
 
   const canvasManager = new Canvas(canvasElement);
   const renderer = new Renderer(canvasManager);
-  const renderTree = new RenderTree(renderer, () => canvasManager.clear());
+  const standManipulator = new StandManipulator();
+  const renderTree = new RenderTree(
+    renderer,
+    () => canvasManager.clear(),
+    standManipulator,
+  );
 
   const updateFunction = () => {
     canvasManager.clear();
@@ -32,7 +39,7 @@ function initialize() {
   updateFunction();
   window.addEventListener("resize", updateFunction);
 
-  const pageManager = new PageManager(renderTree);
+  const pageManager = new PageManager(renderTree, standManipulator);
   pageManager.initSheet();
 
   render(

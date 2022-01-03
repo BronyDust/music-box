@@ -1,26 +1,10 @@
-function debounce(cb: VoidFunction, cd: number) {
-  let timeout: number | null = null;
-
-  return function run() {
-    const unAllocTimeout = () => {
-      timeout = null;
-    }
-
-    const callNow = !timeout;
-    
-    if (timeout !== null) clearTimeout(timeout);
-    timeout = setTimeout(unAllocTimeout, cd);
-    if (callNow) cb();
-  }
-}
-
 class StandManipulator {
   private translation = { x: 0, y: 0 };
-  private debouncedRender?: VoidFunction;
+  private _renderFunction?: VoidFunction;
   private isDraggingStart = false;
 
   constructor(canvasElement: HTMLCanvasElement) {
-    canvasElement.addEventListener('pointerdown', (event) => {
+    canvasElement.addEventListener('mousedown', (event) => {
       event.preventDefault();
       this.isDraggingStart = true;
     });
@@ -29,27 +13,25 @@ class StandManipulator {
       this.isDraggingStart = false;
     };
 
-    canvasElement.addEventListener('pointerup', endDragging);
-    canvasElement.addEventListener('pointercancel', endDragging);
-    canvasElement.addEventListener('pointerleave', endDragging);
+    canvasElement.addEventListener('mouseup', endDragging);
+    canvasElement.addEventListener('mouseleave', endDragging);
 
-    canvasElement.addEventListener('pointermove', (event) => {
+    canvasElement.addEventListener('mousemove', (event) => {
       event.preventDefault();
       if (!this.isDraggingStart) return;
-      
 
       this.translate(event.movementX, event.movementY);
     });
   }
 
   set renderFunction(renderFunction: VoidFunction) {
-    this.debouncedRender = renderFunction;
+    this._renderFunction = renderFunction;
   }
 
   private translate(x: number, y: number) {
     this.translation.x += x;
     this.translation.y += y;
-    this.debouncedRender?.();
+    this._renderFunction?.();
   }
 
   get transformMatrix(): [number, number] {

@@ -1,5 +1,6 @@
 class StandManipulator {
   private translation = { x: 0, y: 0 };
+  private scale = 1;
   private _renderFunction?: VoidFunction;
   private isDraggingStart = false;
 
@@ -34,8 +35,17 @@ class StandManipulator {
     this._renderFunction?.();
   }
 
+  private setScale(newScale: number) {
+    this.scale += newScale;
+    this._renderFunction?.();
+  }
+
   get transformMatrix(): [number, number] {
     return [this.translation.x, this.translation.y];
+  }
+
+  get scaleMatrix(): [number, number] {
+    return [this.scale, this.scale];
   }
 }
 

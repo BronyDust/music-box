@@ -9,6 +9,7 @@ class Renderer {
   private resolutionUniformLocation: WebGLUniformLocation;
   private colorUniformLocation: WebGLUniformLocation;
   private translateUniformLocation: WebGLUniformLocation;
+  private scaleUniformLocation: WebGLUniformLocation;
 
   /**
    * Fill buffer data
@@ -59,6 +60,13 @@ class Renderer {
     if (!translateUniformLocation)
       throw new Error('FATAL: cannot find "user_translation" uniform location');
     this.translateUniformLocation = translateUniformLocation;
+    const scaleUniformLocation = canvas.gl.getUniformLocation(
+      program,
+      "user_scale",
+    );
+    if (!scaleUniformLocation)
+      throw new Error('FATAL: cannot find "user_scale" uniform location');
+    this.scaleUniformLocation = scaleUniformLocation;
     const colorUniformLocation = canvas.gl.getUniformLocation(
       program,
       "user_color",
@@ -125,6 +133,10 @@ class Renderer {
 
   public setTranslation(translate: [number, number]) {
     this.canvas.gl.uniform2fv(this.translateUniformLocation, translate);
+  }
+
+  public setScale(scale: [number, number]) {
+    this.canvas.gl.uniform2fv(this.scaleUniformLocation, scale);
   }
 
   public renderTriangles(coords: number[]) {

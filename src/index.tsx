@@ -33,6 +33,7 @@ function initialize() {
     canvasManager.syncResolution();
     renderer.provideResolutionToShader();
     renderer.setTranslation(standManipulator.transformMatrix);
+    renderer.setScale(standManipulator.scaleMatrix);
     renderTree.render();
   };
 

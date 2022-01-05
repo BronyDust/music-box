@@ -1,11 +1,31 @@
+function canvasBoxToInitialTranslate(canvasElement: HTMLCanvasElement) {
+  const { width, height } = canvasElement.getBoundingClientRect();
+
+  const widthByHeight = (height * 210) / 297;
+  if (widthByHeight < width) {
+    const targetX = (width - widthByHeight) / 2;
+    const scale = (widthByHeight * 100) / 2100;
+    return [targetX, 0, scale];
+  }
+
+  const heightByWidth = (width * 297) / 210;
+  const targetY = (height - heightByWidth) / 2;
+  const scale = (heightByWidth * 100) / 2970;
+  return [0, targetY, scale];
+}
+
 class StandManipulator {
   private translation = { x: 0, y: 0 };
-  private scale = 1;
+  private scale = 20;
   private _renderFunction?: VoidFunction;
   private isDraggingStart = false;
 
   constructor(canvasElement: HTMLCanvasElement) {
-    canvasElement.addEventListener('mousedown', (event) => {
+    const [x, y, scale] = canvasBoxToInitialTranslate(canvasElement);
+    this.translation = { x, y };
+    this.scale = scale;
+
+    canvasElement.addEventListener("mousedown", (event) => {
       event.preventDefault();
       this.isDraggingStart = true;
     });
@@ -14,14 +34,20 @@ class StandManipulator {
       this.isDraggingStart = false;
     };
 
-    canvasElement.addEventListener('mouseup', endDragging);
-    canvasElement.addEventListener('mouseleave', endDragging);
+    canvasElement.addEventListener("mouseup", endDragging);
+    canvasElement.addEventListener("mouseleave", endDragging);
 
-    canvasElement.addEventListener('mousemove', (event) => {
+    canvasElement.addEventListener("mousemove", (event) => {
       event.preventDefault();
       if (!this.isDraggingStart) return;
 
       this.translate(event.movementX, event.movementY);
+    });
+
+    canvasElement.addEventListener("wheel", (event) => {
+      event.preventDefault();
+
+      this.setScale(event.deltaY * -0.01);
     });
   }
 

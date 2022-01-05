@@ -53,8 +53,8 @@ class PageManager extends Observer<PageManagerState> {
 
     const staff = new Staff(
       [left, this.sheetFilledSpace],
-      [width - right, this.sheetFilledSpace + 8],
-      [6.5, 6.5],
+      [width - right, this.sheetFilledSpace + 80],
+      [65, 65],
     );
     this.renderTree.tree.append(staff);
     this.sheetFilledSpace += staff.height;

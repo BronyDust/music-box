@@ -32,12 +32,13 @@ function initialize() {
     canvasManager.clear();
     canvasManager.syncResolution();
     renderer.provideResolutionToShader();
-    renderer.setTranslation(standManipulator.transformMatrix);
     renderer.setScale(standManipulator.scaleMatrix);
+    renderer.setTranslation(standManipulator.transformMatrix);
     renderTree.render();
   };
 
   standManipulator.renderFunction = () => {
+    renderer.setScale(standManipulator.scaleMatrix);
     renderer.setTranslation(standManipulator.transformMatrix);
     renderTree.render();
   };

@@ -5,15 +5,15 @@ class Sheet extends RenderTreeNode {
   public height: number;
   public width: number;
   public margins = {
-    top: 30,
-    right: 21,
-    bottom: 25,
-    left: 21
+    top: 300,
+    right: 210,
+    bottom: 250,
+    left: 210
   };
 
   constructor() {
-    const height = 297;
-    const width = 210;
+    const height = 2970;
+    const width = 2100;
 
     super(
       RenderType.Triangle,

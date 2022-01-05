@@ -20,11 +20,8 @@ class StandManipulator {
   private _renderFunction?: VoidFunction;
   private isDraggingStart = false;
 
-  constructor(canvasElement: HTMLCanvasElement) {
-    const [x, y, scale] = canvasBoxToInitialTranslate(canvasElement);
-    this.translation = { x, y };
-    this.scale = scale;
-
+  constructor(private canvasElement: HTMLCanvasElement) {
+    this.setDefaultTranslating();
     canvasElement.addEventListener("mousedown", (event) => {
       event.preventDefault();
       this.isDraggingStart = true;
@@ -55,6 +52,13 @@ class StandManipulator {
     this._renderFunction = renderFunction;
   }
 
+  public setDefaultTranslating() {
+    const [x, y, scale] = canvasBoxToInitialTranslate(this.canvasElement);
+    this.translation = { x, y };
+    this.scale = scale;
+    this._renderFunction?.();
+  }
+
   private translate(x: number, y: number) {
     this.translation.x += x;
     this.translation.y += y;
@@ -62,7 +66,11 @@ class StandManipulator {
   }
 
   private setScale(newScale: number) {
+    if (newScale < 0 && this.scale < 4) return;
+
     this.scale += newScale;
+    this.translation.x -= 10 * newScale;
+    this.translation.y -= 10 * newScale;
     this._renderFunction?.();
   }
 

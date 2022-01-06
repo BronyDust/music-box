@@ -27,8 +27,8 @@ class RenderTree {
   public select(normalX: number, normalY: number) {
     let selected: null | RenderTreeNode = null;
     for (const node of this._tree.iteratorReversed()) {
-      if (selected) return node.deselect();
-
+      node.deselect();
+      if (selected) continue;
       if (node.checkCollision(normalX, normalY)) selected = node;
     }
 

@@ -28,6 +28,17 @@ function initialize() {
   const standManipulator = new StandManipulator(canvasElement, cursorController);
   const renderTree = new RenderTree(renderer, () => canvasManager.clear());
 
+  canvasElement.addEventListener('click', (event) => {
+    event.preventDefault();
+
+    const { pageX, pageY } = event;
+    const [ transformX, transformY ] = standManipulator.transformMatrix;
+    const [ scaleX, scaleY ] = standManipulator.scaleMatrix;
+
+    const selected = renderTree.select((pageX - transformX) / scaleX * 100, (pageY - transformY) / scaleY * 100);
+    console.log(selected);
+  })
+
   const updateFunction = () => {
     canvasManager.clear();
     canvasManager.syncResolution();

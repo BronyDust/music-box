@@ -56,12 +56,14 @@ class RenderTree {
 
     for (const node of this._tree.iteratorReversed()) {
       node.selectable?.deselect();
+      node.selectable?.onDeselect?.();
 
       if (selected || !node.selectable) continue;
       if (node.selectable.checkCollision(normalX, normalY)) selected = node as SelectableRenderTreeNode;
     }
 
     this.selectedNode = selected;
+    selected?.selectable.onSelect?.();
   }
 
   public deselect() {

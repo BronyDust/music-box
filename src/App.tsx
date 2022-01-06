@@ -1,9 +1,11 @@
-import { BsFullscreenExit, BsPlusCircle } from "solid-icons/bs";
+import { BsFullscreenExit } from "solid-icons/bs";
 import {
   Component,
   createSignal,
+  Match,
   onCleanup,
   onMount,
+  Switch,
   useContext,
 } from "solid-js";
 import { PageManagerContext, StandManipulatorContext } from ".";
@@ -11,6 +13,8 @@ import { PageManagerState } from "./agents/page-manager.class";
 import Button from "./components/atoms/Button";
 import CommandPalette from "./components/molecules/CommandPalette";
 import { CommandPaletteSection } from "./components/molecules/CommandPalette/CommandPalette";
+import SheetCommands from "./components/organisms/SheetCommands";
+import StaffCommands from "./components/organisms/StaffCommands";
 
 const App: Component = () => {
   const pageManager = useContext(PageManagerContext);
@@ -27,9 +31,15 @@ const App: Component = () => {
 
   return (
     <CommandPalette>
-      <CommandPaletteSection title="Нотный стан">
-        <Button suffix={<BsPlusCircle />} onClick={() => pageManager.createStaff()}>Добавить</Button>
-      </CommandPaletteSection>
+      <Switch>
+        <Match when={getState() === PageManagerState.SheetSelected}>
+          <SheetCommands />
+        </Match>
+        <Match when={getState() === PageManagerState.StaffSelected}>
+          <StaffCommands />
+        </Match>
+      </Switch>
+      
       <CommandPaletteSection title="Навигация">
         <Button suffix={<BsFullscreenExit />} onClick={() => standManipulator.setDefaultTranslating()}>По умолчанию</Button>
       </CommandPaletteSection>

@@ -1,4 +1,4 @@
-import { Component, JSX, Show } from "solid-js";
+import { Component, Show } from "solid-js";
 import Button from "../../atoms/Button";
 import Card from "../../atoms/Card";
 import Typography from "../../atoms/Typography";

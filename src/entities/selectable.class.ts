@@ -30,8 +30,12 @@ class Selectable {
     return this._isSelected;
   }
 
+  public onSelect: VoidFunction | null = null;
+  public onDeselect: VoidFunction | null = null;
+
   public deselect() {
     this._isSelected = false;
+    this.onDeselect?.();
   }
 
   get collider() {

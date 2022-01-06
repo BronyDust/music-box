@@ -11,22 +11,38 @@ import Staff from "../entities/staff.class";
 export enum PageManagerState {
   NoSheet,
   Sheet,
+  SheetSelected,
+  StaffSelected,
 }
 
 class PageManager extends Observer<PageManagerState> {
   private sheetNode: LinkedListNode<RenderTreeNode, Sheet> | null = null;
   private sheetFilledSpace = 0;
-  private pageStaffs = new Set<Staff>();
+  private pageStaffs = new Set<LinkedListNode<Staff>>();
+  private _selectedStaff: LinkedListNode<Staff> | null = null;
+
+  get selectedStaff() {
+    return this._selectedStaff;
+  }
 
   constructor(private renderTree: RenderTree) {
     super(PageManagerState.NoSheet);
-    renderTree.onSelect = (e) => console.log(e);
+    renderTree.onDeselect = () => {
+      this.state = PageManagerState.Sheet;
+      this.notify();
+    };
   }
 
   public initSheet() {
     if (this.sheetNode) return;
 
     const sheet = new Sheet();
+    if (sheet.selectable) {
+      sheet.selectable.onSelect = () => {
+        this.state = PageManagerState.SheetSelected;
+        this.notify();
+      }
+    }
 
     this.sheetFilledSpace = sheet.margins.top;
     this.sheetNode = this.renderTree.tree.append(sheet);
@@ -57,9 +73,30 @@ class PageManager extends Observer<PageManagerState> {
       [width - right, this.sheetFilledSpace + 80],
       [65, 65],
     );
-    this.renderTree.tree.append(staff);
+    
+    const staffNode = this.renderTree.tree.append(staff);
+    this.pageStaffs.add(staffNode);
     this.sheetFilledSpace += staff.height;
 
+    if (staff.selectable) {
+      staff.selectable.onSelect = () => {
+        this._selectedStaff = staffNode;
+        this.state = PageManagerState.StaffSelected;
+        this.notify();
+      }
+      staff.selectable.onDeselect = () => {
+        this._selectedStaff = null;
+      }
+    }
+
+    this.notify();
+  }
+
+  public removeSelectedStaff() {
+    if (!this._selectedStaff) return;
+
+    this.pageStaffs.delete(this._selectedStaff);
+    this.renderTree.tree.deleteNode(this._selectedStaff);
     this.notify();
   }
 }

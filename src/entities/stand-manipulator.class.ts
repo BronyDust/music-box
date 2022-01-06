@@ -48,9 +48,9 @@ class StandManipulator {
 
     const wheelTranslateHandler = (event: WheelEvent) => {
       if (event.shiftKey) {
-        this.translate(-event.deltaY, 0);
+        this.translate(event.deltaY, event.deltaX);
       } else {
-        this.translate(0, event.deltaY);
+        this.translate(-event.deltaX, -event.deltaY);
       }
     }
 

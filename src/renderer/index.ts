@@ -178,6 +178,26 @@ class Renderer {
     const primitiveOffset = 0;
     this.canvas.gl.drawArrays(primitiveType, primitiveOffset, points);
   }
+
+  public renderLineLoop(coords: number[]) {
+    const typedMatrix = new Float32Array(coords);
+    if (typedMatrix.length % 2)
+      throw new Error(
+        "FATAL: lines cannot be rendered. Be sure coordinates has xy full pairs",
+      );
+
+    const points = typedMatrix.length / 2;
+    if (points < 3)
+      throw new Error(
+        "FATAL: lines cannot be rendered. Coords should contain 3+ points",
+      );
+
+    this.setBufferData(typedMatrix);
+    
+    const primitiveType = this.canvas.gl.LINE_LOOP;
+    const primitiveOffset = 0;
+    this.canvas.gl.drawArrays(primitiveType, primitiveOffset, points);
+  }
 }
 
 export default Renderer;

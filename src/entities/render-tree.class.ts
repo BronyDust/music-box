@@ -5,6 +5,7 @@ import RenderTreeNode from "./render-tree-node.abstract";
 export enum RenderType {
   Line,
   Triangle,
+  LineLoop,
 }
 
 export type TransformMatrixFunction = (prevMatrix: number[]) => number[];
@@ -24,15 +25,33 @@ class RenderTree {
     return this._tree;
   }
 
+  private _selectedNode: null | RenderTreeNode = null;
+  private set selectedNode(selectedNode: null | RenderTreeNode) {
+    if (this._selectedNode === selectedNode) return;
+    this._selectedNode = selectedNode;
+
+    selectedNode ? this.onSelect?.(selectedNode) : this.onDeselect?.();
+  }
+
+  public onSelect: ((selected: RenderTreeNode) => void) | null = null;
+  public onDeselect: VoidFunction | null = null;
+
   public select(normalX: number, normalY: number) {
     let selected: null | RenderTreeNode = null;
+
     for (const node of this._tree.iteratorReversed()) {
-      node.deselect();
-      if (selected) continue;
-      if (node.checkCollision(normalX, normalY)) selected = node;
+      node.selectable?.deselect();
+
+      if (selected || !node.selectable) continue;
+      if (node.selectable.checkCollision(normalX, normalY)) selected = node;
     }
 
-    return selected;
+    this.selectedNode = selected;
+  }
+
+  public deselect() {
+    for (const node of this._tree.iteratorReversed()) node.selectable?.deselect();
+    this.selectedNode = null;
   }
 
   public render() {
@@ -49,6 +68,9 @@ class RenderTree {
           break;
         case RenderType.Triangle:
           this.renderer.renderTriangles(node.matrix);
+          break;
+        case RenderType.LineLoop:
+          this.renderer.renderLineLoop(node.matrix);
           break;
       }
     }

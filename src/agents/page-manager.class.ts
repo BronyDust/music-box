@@ -4,7 +4,6 @@ import RenderTreeNode from "../entities/render-tree-node.abstract";
 import RenderTree from "../entities/render-tree.class";
 import Sheet from "../entities/sheet.class";
 import Staff from "../entities/staff.class";
-import StandManipulator from "../entities/stand-manipulator.class";
 
 /**
  * Ordered enum
@@ -21,12 +20,14 @@ class PageManager extends Observer<PageManagerState> {
 
   constructor(private renderTree: RenderTree) {
     super(PageManagerState.NoSheet);
+    renderTree.onSelect = (e) => console.log(e);
   }
 
   public initSheet() {
     if (this.sheetNode) return;
 
     const sheet = new Sheet();
+
     this.sheetFilledSpace = sheet.margins.top;
     this.sheetNode = this.renderTree.tree.append(sheet);
     this.state = PageManagerState.Sheet;

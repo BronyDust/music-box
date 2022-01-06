@@ -41,10 +41,23 @@ class StandManipulator {
       this.translate(event.movementX, event.movementY);
     });
 
+    const wheelTranslateHandler = (event: WheelEvent) => {
+      if (event.shiftKey) {
+        this.translate(-event.deltaY, 0);
+      } else {
+        this.translate(0, event.deltaY);
+      }
+    }
+
+    const wheelScaleHandler = (event: WheelEvent) => {
+      this.setScale(event.deltaY * -0.01);
+    }
+
     canvasElement.addEventListener("wheel", (event) => {
       event.preventDefault();
 
-      this.setScale(event.deltaY * -0.01);
+      if (!event.ctrlKey) return wheelTranslateHandler(event);
+      wheelScaleHandler(event);
     });
   }
 

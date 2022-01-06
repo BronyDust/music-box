@@ -14,6 +14,7 @@ export const StandManipulatorContext = createContext<StandManipulator>(null!);
 function initialize() {
   const canvasElement = document.createElement("canvas");
   canvasElement.classList.add(css.canvas);
+  canvasElement.tabIndex = -1;
   document.body.appendChild(canvasElement);
 
   const appRoot = document.createElement("div");
@@ -23,10 +24,7 @@ function initialize() {
   const canvasManager = new Canvas(canvasElement);
   const renderer = new Renderer(canvasManager);
   const standManipulator = new StandManipulator(canvasElement);
-  const renderTree = new RenderTree(
-    renderer,
-    () => canvasManager.clear(),
-  );
+  const renderTree = new RenderTree(renderer, () => canvasManager.clear());
 
   const updateFunction = () => {
     canvasManager.clear();
@@ -52,7 +50,9 @@ function initialize() {
   render(
     () => (
       <PageManagerContext.Provider value={pageManager}>
-        <App />
+        <StandManipulatorContext.Provider value={standManipulator}>
+          <App />
+        </StandManipulatorContext.Provider>
       </PageManagerContext.Provider>
     ),
     appRoot,

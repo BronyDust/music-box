@@ -7,6 +7,7 @@ import Canvas from "./agents/canvas.class";
 import Renderer from "./renderer";
 import PageManager from "./agents/page-manager.class";
 import StandManipulator from "./entities/stand-manipulator.class";
+import CursorController from "./entities/cursor-controller.class";
 
 export const PageManagerContext = createContext<PageManager>(null!);
 export const StandManipulatorContext = createContext<StandManipulator>(null!);
@@ -23,7 +24,8 @@ function initialize() {
 
   const canvasManager = new Canvas(canvasElement);
   const renderer = new Renderer(canvasManager);
-  const standManipulator = new StandManipulator(canvasElement);
+  const cursorController = new CursorController();
+  const standManipulator = new StandManipulator(canvasElement, cursorController);
   const renderTree = new RenderTree(renderer, () => canvasManager.clear());
 
   const updateFunction = () => {

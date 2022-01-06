@@ -1,3 +1,5 @@
+import CursorController, { CursorMode } from "./cursor-controller.class";
+
 function canvasBoxToInitialTranslate(canvasElement: HTMLCanvasElement) {
   const { width, height } = canvasElement.getBoundingClientRect();
 
@@ -20,15 +22,18 @@ class StandManipulator {
   private _renderFunction?: VoidFunction;
   private isDraggingStart = false;
 
-  constructor(private canvasElement: HTMLCanvasElement) {
+  constructor(private canvasElement: HTMLCanvasElement, cursorController: CursorController) {
     this.setDefaultTranslating();
     canvasElement.addEventListener("mousedown", (event) => {
       event.preventDefault();
+      if (event.button !== 1) return;
+      cursorController.state = CursorMode.Grabbing;
       this.isDraggingStart = true;
     });
 
     const endDragging = () => {
       this.isDraggingStart = false;
+      cursorController.state = CursorMode.Default;
     };
 
     canvasElement.addEventListener("mouseup", endDragging);

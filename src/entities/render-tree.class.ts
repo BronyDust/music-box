@@ -1,6 +1,8 @@
 import { LinkedList } from "../abstracts/linked-list.class";
 import Renderer from "../renderer";
 import RenderTreeNode from "./render-tree-node.abstract";
+import Selectable from "./selectable.class";
+import SelectionView from "./selection-view.class";
 
 export enum RenderType {
   Line,
@@ -9,6 +11,8 @@ export enum RenderType {
 }
 
 export type TransformMatrixFunction = (prevMatrix: number[]) => number[];
+
+type SelectableRenderTreeNode = RenderTreeNode & { selectable: Selectable };
 
 class RenderTree {
   private _tree: LinkedList<RenderTreeNode>;
@@ -25,25 +29,36 @@ class RenderTree {
     return this._tree;
   }
 
-  private _selectedNode: null | RenderTreeNode = null;
-  private set selectedNode(selectedNode: null | RenderTreeNode) {
-    if (this._selectedNode === selectedNode) return;
+  private selectionView = new SelectionView([0, 0, 0, 0]);
+
+  private _selectedNode: null | SelectableRenderTreeNode = null;
+  private set selectedNode(selectedNode: null | SelectableRenderTreeNode) {
     this._selectedNode = selectedNode;
 
-    selectedNode ? this.onSelect?.(selectedNode) : this.onDeselect?.();
+    if (!selectedNode) {
+      this.onDeselect?.();
+      return;
+    }
+
+    this.onSelect?.(selectedNode);
+    this.selectionView.updateMatrix(selectedNode.selectable.collider);
   }
 
-  public onSelect: ((selected: RenderTreeNode) => void) | null = null;
+  private get selectedNode() {
+    return this._selectedNode;
+  }
+
+  public onSelect: ((selected: RenderTreeNode & { selectable: Selectable }) => void) | null = null;
   public onDeselect: VoidFunction | null = null;
 
   public select(normalX: number, normalY: number) {
-    let selected: null | RenderTreeNode = null;
+    let selected: null | SelectableRenderTreeNode = null;
 
     for (const node of this._tree.iteratorReversed()) {
       node.selectable?.deselect();
 
       if (selected || !node.selectable) continue;
-      if (node.selectable.checkCollision(normalX, normalY)) selected = node;
+      if (node.selectable.checkCollision(normalX, normalY)) selected = node as SelectableRenderTreeNode;
     }
 
     this.selectedNode = selected;
@@ -74,6 +89,12 @@ class RenderTree {
           break;
       }
     }
+
+    if (!this.selectedNode) return;
+    this.selectionView.render();
+    const { color, matrix } = this.selectionView;
+    this.renderer.setColor(...color);
+    this.renderer.renderLineLoop(matrix);
   }
 }
 

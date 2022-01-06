@@ -57,6 +57,7 @@ function initialize() {
     const [ scaleX, scaleY ] = standManipulator.scaleMatrix;
 
     renderTree.select((pageX - transformX) / scaleX * 100, (pageY - transformY) / scaleY * 100);
+    renderTree.render();
   });
 
   render(

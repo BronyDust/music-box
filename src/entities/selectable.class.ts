@@ -34,6 +34,10 @@ class Selectable {
     this._isSelected = false;
   }
 
+  get collider() {
+    return this._collider;
+  }
+
   public updateCollider(matrix: number[]) {
     this._collider = this._matrixToCollider(matrix);
   }

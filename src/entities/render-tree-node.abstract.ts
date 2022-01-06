@@ -8,9 +8,10 @@ abstract class RenderTreeNode {
     public renderType: RenderType,
     public matrix: number[],
     public color: [number, number, number, number],
-    isSelectable = true
+    isSelectable = true,
+    matrixToCollider?: (matrix: number[]) => [number, number, number, number]
   ) {
-    if (isSelectable) this._selectable = new Selectable(matrix);
+    if (isSelectable) this._selectable = new Selectable(matrix, matrixToCollider);
   }
 
   get selectable() {

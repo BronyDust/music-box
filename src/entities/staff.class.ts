@@ -46,7 +46,12 @@ class Staff extends RenderTreeNode {
         lx,
         zyMargined + gap * 5,
       ],
-      [0, 0, 0, 1]
+      [0, 0, 0, 1],
+      true,
+      () => ([
+        zx, zy,
+        lx, ly + top + bottom
+      ])
     );
     
     this.height = ly - zy + top + bottom;

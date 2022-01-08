@@ -21,6 +21,10 @@ class Staff extends RenderTreeNode {
     super(
       RenderType.Line,
       [
+        zx, zyMargined,
+        zx, zyMargined + gap * 5,
+        lx, zyMargined,
+        lx, zyMargined + gap * 5,
         zx,
         zyMargined,
         lx,

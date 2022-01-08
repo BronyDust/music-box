@@ -1,5 +1,5 @@
 import RenderTreeNode from "./render-tree-node.abstract";
-import { RenderType, TransformMatrixFunction } from "./render-tree.class";
+import { RenderType } from "./render-tree.class";
 
 class Sheet extends RenderTreeNode {
   public height: number;

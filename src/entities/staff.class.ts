@@ -1,7 +1,6 @@
 import RenderTreeNode from "./render-tree-node.abstract";
 import {
   RenderType,
-  TransformMatrixFunction,
 } from "./render-tree.class";
 
 class Staff extends RenderTreeNode {

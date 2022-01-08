@@ -18,56 +18,56 @@ class Renderer {
    */
   private setBufferData(
     matrix: Float32Array,
-    hint = this.canvas.gl.STATIC_DRAW,
+    hint = this.context.STATIC_DRAW,
   ) {
-    this.canvas.gl.bufferData(this.canvas.gl.ARRAY_BUFFER, matrix, hint);
+    this.context.bufferData(this.context.ARRAY_BUFFER, matrix, hint);
   }
 
-  constructor(private canvas: Canvas) {
+  constructor(private context: WebGL2RenderingContext) {
     // Create program
     const vertexShader = compileShader(
-      canvas.gl,
-      canvas.gl.VERTEX_SHADER,
+      context,
+      context.VERTEX_SHADER,
       vertexSource,
     );
     const fragmentShader = compileShader(
-      canvas.gl,
-      canvas.gl.FRAGMENT_SHADER,
+      context,
+      context.FRAGMENT_SHADER,
       fragmentSource,
     );
     if (!vertexShader || !fragmentShader)
       throw new Error("FATAL: cannot compile shaders");
-    const program = webglProgram(canvas.gl, vertexShader, fragmentShader);
+    const program = webglProgram(context, vertexShader, fragmentShader);
     if (!program) throw new Error("FATAL: cannot link WebGL program");
-    canvas.gl.useProgram(program);
+    context.useProgram(program);
 
     // Get pointers
-    this.positionAttributeLocation = canvas.gl.getAttribLocation(
+    this.positionAttributeLocation = context.getAttribLocation(
       program,
       "manual_position",
     );
-    const resolutionUniformLocation = canvas.gl.getUniformLocation(
+    const resolutionUniformLocation = context.getUniformLocation(
       program,
       "user_resolution",
     );
     if (!resolutionUniformLocation)
       throw new Error('FATAL: cannot find "user_resolution" uniform location');
     this.resolutionUniformLocation = resolutionUniformLocation;
-    const translateUniformLocation = canvas.gl.getUniformLocation(
+    const translateUniformLocation = context.getUniformLocation(
       program,
       "user_translation",
     );
     if (!translateUniformLocation)
       throw new Error('FATAL: cannot find "user_translation" uniform location');
     this.translateUniformLocation = translateUniformLocation;
-    const scaleUniformLocation = canvas.gl.getUniformLocation(
+    const scaleUniformLocation = context.getUniformLocation(
       program,
       "user_scale",
     );
     if (!scaleUniformLocation)
       throw new Error('FATAL: cannot find "user_scale" uniform location');
     this.scaleUniformLocation = scaleUniformLocation;
-    const colorUniformLocation = canvas.gl.getUniformLocation(
+    const colorUniformLocation = context.getUniformLocation(
       program,
       "user_color",
     );
@@ -76,21 +76,21 @@ class Renderer {
     this.colorUniformLocation = colorUniformLocation;
 
     // Attach buffer
-    const positionBuffer = canvas.gl.createBuffer();
+    const positionBuffer = context.createBuffer();
     if (!positionBuffer) throw new Error("FATAL: cannot create WebGL buffer");
-    canvas.gl.bindBuffer(canvas.gl.ARRAY_BUFFER, positionBuffer);
-    const vertexArray = canvas.gl.createVertexArray();
+    context.bindBuffer(context.ARRAY_BUFFER, positionBuffer);
+    const vertexArray = context.createVertexArray();
     if (!vertexArray) throw new Error("FATAL: cannot create vertex array");
-    canvas.gl.bindVertexArray(vertexArray);
-    canvas.gl.enableVertexAttribArray(this.positionAttributeLocation);
+    context.bindVertexArray(vertexArray);
+    context.enableVertexAttribArray(this.positionAttributeLocation);
 
     // Explain how to render data from buffer to webgl context
     const size = 2;
-    const type = canvas.gl.FLOAT;
+    const type = context.FLOAT;
     const normalize = false;
     const stride = 0;
     const offset = 0;
-    canvas.gl.vertexAttribPointer(
+    context.vertexAttribPointer(
       this.positionAttributeLocation,
       size,
       type,
@@ -106,8 +106,8 @@ class Renderer {
    * [-1, 1]
    */
   public provideResolutionToShader() {
-    const { width, height } = this.canvas.gl.canvas;
-    this.canvas.gl.uniform2f(this.resolutionUniformLocation, width, height);
+    const { width, height } = this.context.canvas;
+    this.context.uniform2f(this.resolutionUniformLocation, width, height);
   }
 
   /**
@@ -122,7 +122,7 @@ class Renderer {
 
     const alpha = Math.max(0, Math.min(a, 1));
 
-    this.canvas.gl.uniform4f(
+    this.context.uniform4f(
       this.colorUniformLocation,
       red,
       green,
@@ -132,11 +132,11 @@ class Renderer {
   }
 
   public setTranslation(translate: [number, number]) {
-    this.canvas.gl.uniform2fv(this.translateUniformLocation, translate);
+    this.context.uniform2fv(this.translateUniformLocation, translate);
   }
 
   public setScale(scale: [number, number]) {
-    this.canvas.gl.uniform2fv(this.scaleUniformLocation, scale);
+    this.context.uniform2fv(this.scaleUniformLocation, scale);
   }
 
   public renderTriangles(coords: number[]) {
@@ -154,9 +154,9 @@ class Renderer {
 
     this.setBufferData(typedMatrix);
 
-    const primitiveType = this.canvas.gl.TRIANGLES;
+    const primitiveType = this.context.TRIANGLES;
     const primitiveOffset = 0;
-    this.canvas.gl.drawArrays(primitiveType, primitiveOffset, points);
+    this.context.drawArrays(primitiveType, primitiveOffset, points);
   }
 
   public renderLines(coords: number[]) {
@@ -174,9 +174,9 @@ class Renderer {
 
     this.setBufferData(typedMatrix);
 
-    const primitiveType = this.canvas.gl.LINES;
+    const primitiveType = this.context.LINES;
     const primitiveOffset = 0;
-    this.canvas.gl.drawArrays(primitiveType, primitiveOffset, points);
+    this.context.drawArrays(primitiveType, primitiveOffset, points);
   }
 
   public renderLineLoop(coords: number[]) {
@@ -194,9 +194,9 @@ class Renderer {
 
     this.setBufferData(typedMatrix);
     
-    const primitiveType = this.canvas.gl.LINE_LOOP;
+    const primitiveType = this.context.LINE_LOOP;
     const primitiveOffset = 0;
-    this.canvas.gl.drawArrays(primitiveType, primitiveOffset, points);
+    this.context.drawArrays(primitiveType, primitiveOffset, points);
   }
 }
 

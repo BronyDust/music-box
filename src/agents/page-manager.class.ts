@@ -5,12 +5,8 @@ import RenderTree from "../entities/render-tree.class";
 import Sheet from "../entities/sheet.class";
 import Staff from "../entities/staff.class";
 
-/**
- * Ordered enum
- */
 export enum PageManagerState {
-  NoSheet,
-  Sheet,
+  NothingSelected,
   SheetSelected,
   StaffSelected,
 }
@@ -26,9 +22,9 @@ class PageManager extends Observer<PageManagerState> {
   }
 
   constructor(private renderTree: RenderTree) {
-    super(PageManagerState.NoSheet);
+    super(PageManagerState.NothingSelected);
     renderTree.onDeselect = () => {
-      this.state = PageManagerState.Sheet;
+      this.state = PageManagerState.NothingSelected;
       this.notify();
     };
   }
@@ -46,7 +42,6 @@ class PageManager extends Observer<PageManagerState> {
 
     this.sheetFilledSpace = sheet.margins.top;
     this.sheetNode = this.renderTree.tree.append(sheet);
-    this.state = PageManagerState.Sheet;
     this.notify();
   }
 
@@ -55,7 +50,6 @@ class PageManager extends Observer<PageManagerState> {
 
     this.renderTree.tree.deleteNode(this.sheetNode);
     this.sheetNode = null;
-    this.state = PageManagerState.NoSheet;
     this.notify();
   }
 

@@ -57,19 +57,18 @@ export class LinkedList<T> {
   public deleteNode<D extends T = T>(node: LinkedListNode<T, D>): void {
     if (node === this.head) {
       this.head = node.next;
-      node.next = null;
-    } else if (node === this.tail) {
-      this.tail = node.prev;
-      node.prev = null;
-    } else {
-      const left = node.prev;
-      const right = node.next;
-      if (left) left.next = right;
-      if (right) right.prev = left;
-
-      node.prev = null;
-      node.next = null;
     }
+
+    if (node === this.tail) {
+      this.tail = node.prev;
+    }
+
+    const left = node.prev;
+    const right = node.next;
+    node.prev = null;
+    node.next = null;
+    if (left) left.next = right;
+    if (right) right.prev = left;
 
     this._size--;
     this.onChange();

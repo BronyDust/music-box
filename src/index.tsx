@@ -7,7 +7,6 @@ import Renderer from "./renderer";
 import PageManager from "./agents/page-manager.class";
 import StandManipulator from "./entities/stand-manipulator.class";
 import CursorController from "./entities/cursor-controller.class";
-import Staff from "./entities/staff.class";
 
 export const PageManagerContext = createContext<PageManager>(null!);
 export const StandManipulatorContext = createContext<StandManipulator>(null!);

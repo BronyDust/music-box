@@ -13,8 +13,6 @@ export enum PageManagerState {
 
 class PageManager extends Observer<PageManagerState> {
   private sheetNode: LinkedListNode<RenderTreeNode, Sheet> | null = null;
-  private sheetFilledSpace = 0;
-  private pageStaffs = new Set<LinkedListNode<Staff>>();
   private _selectedStaff: LinkedListNode<Staff> | null = null;
 
   get selectedStaff() {
@@ -40,58 +38,52 @@ class PageManager extends Observer<PageManagerState> {
       }
     }
 
-    this.sheetFilledSpace = sheet.margins.top;
+    const a = sheet.getHasSpace(10, 10);
+    console.log(a);
+
     this.sheetNode = this.renderTree.tree.append(sheet);
     this.notify();
   }
 
-  public deleteSheet() {
-    if (!this.sheetNode) return;
-
-    this.renderTree.tree.deleteNode(this.sheetNode);
-    this.sheetNode = null;
-    this.notify();
-  }
-
   public createStaff() {
-    if (!this.sheetNode) return;
-    const sheet = this.sheetNode.value;
+    // if (!this.sheetNode) return;
+    // const sheet = this.sheetNode.value;
 
-    const { bottom, left, right } = sheet.margins;
-    if (this.sheetFilledSpace + bottom + 8 >= sheet.height) return;
+    // const { bottom, left, right } = sheet.margins;
+    // if (this.sheetFilledSpace + bottom + 8 >= sheet.height) return;
 
-    const { width } = sheet;
+    // const { width } = sheet;
 
-    const staff = new Staff(
-      [left, this.sheetFilledSpace],
-      [width - right, this.sheetFilledSpace + 80],
-      [65, 65],
-    );
+    // const staff = new Staff(
+    //   [left, this.sheetFilledSpace],
+    //   [width - right, this.sheetFilledSpace + 80],
+    //   [65, 65],
+    // );
     
-    const staffNode = this.renderTree.tree.append(staff);
-    this.pageStaffs.add(staffNode);
-    this.sheetFilledSpace += staff.height;
+    // const staffNode = this.renderTree.tree.append(staff);
+    // this.pageStaffs.add(staffNode);
+    // this.sheetFilledSpace += staff.height;
 
-    if (staff.selectable) {
-      staff.selectable.onSelect = () => {
-        this._selectedStaff = staffNode;
-        this.state = PageManagerState.StaffSelected;
-        this.notify();
-      }
-      staff.selectable.onDeselect = () => {
-        this._selectedStaff = null;
-      }
-    }
+    // if (staff.selectable) {
+    //   staff.selectable.onSelect = () => {
+    //     this._selectedStaff = staffNode;
+    //     this.state = PageManagerState.StaffSelected;
+    //     this.notify();
+    //   }
+    //   staff.selectable.onDeselect = () => {
+    //     this._selectedStaff = null;
+    //   }
+    // }
 
-    this.notify();
+    // this.notify();
   }
 
   public removeSelectedStaff() {
-    if (!this._selectedStaff) return;
+    // if (!this._selectedStaff) return;
 
-    this.pageStaffs.delete(this._selectedStaff);
-    this.renderTree.tree.deleteNode(this._selectedStaff);
-    this.notify();
+    // this.pageStaffs.delete(this._selectedStaff);
+    // this.renderTree.tree.deleteNode(this._selectedStaff);
+    // this.notify();
   }
 }
 

@@ -38,18 +38,15 @@ class PageManager extends Observer<PageManagerState> {
       }
     }
 
-    const a = sheet.getHasSpace(10, 10);
-    console.log(a);
-
     this.sheetNode = this.renderTree.tree.append(sheet);
     this.notify();
   }
 
   public createStaff() {
-    // if (!this.sheetNode) return;
-    // const sheet = this.sheetNode.value;
+    if (!this.sheetNode) return;
+    const sheet = this.sheetNode.value;
+    const staff = new Staff(sheet.width);
 
-    // const { bottom, left, right } = sheet.margins;
     // if (this.sheetFilledSpace + bottom + 8 >= sheet.height) return;
 
     // const { width } = sheet;

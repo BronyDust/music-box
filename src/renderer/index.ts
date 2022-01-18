@@ -6,7 +6,6 @@ import { Matrix3x3 } from "./utils/matrix-math";
 
 class Renderer {
   private positionAttributeLocation: number;
-  private resolutionUniformLocation: WebGLUniformLocation;
   private colorUniformLocation: WebGLUniformLocation;
   private transformMatrixUniformLocation: WebGLUniformLocation;
 
@@ -45,13 +44,6 @@ class Renderer {
       program,
       "manual_position",
     );
-    const resolutionUniformLocation = context.getUniformLocation(
-      program,
-      "user_resolution",
-    );
-    if (!resolutionUniformLocation)
-      throw new Error('FATAL: cannot find "user_resolution" uniform location');
-    this.resolutionUniformLocation = resolutionUniformLocation;
     const transformMatrixUniformLocation = context.getUniformLocation(program, 'user_matrix');
     if (!transformMatrixUniformLocation)
       throw new Error('FATAL: cannot find "user_matrix" uniform location');
@@ -88,16 +80,6 @@ class Renderer {
       stride,
       offset,
     );
-  }
-
-  /**
-   * Passes actual canvas w/h to vertex shader to be
-   * able to transform absolute x/y to relative canvases
-   * [-1, 1]
-   */
-  public provideResolutionToShader() {
-    const { width, height } = this.context.canvas;
-    this.context.uniform2f(this.resolutionUniformLocation, width, height);
   }
 
   /**

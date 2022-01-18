@@ -41,7 +41,6 @@ function initialize() {
     canvasElement.height = height;
     canvasContext.viewport(0, 0, width, height);
 
-    renderer.provideResolutionToShader();
     renderer.setMatrix(standManipulator.matrix);
     renderTree.render();
   };

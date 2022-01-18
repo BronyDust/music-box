@@ -1,29 +1,41 @@
-import { getScaleMatrix, getTranslationMatrix, multiply } from "../renderer/utils/matrix-math";
+import {
+  getScaleMatrix,
+  getTranslationMatrix,
+  multiply,
+  project,
+} from "../renderer/utils/matrix-math";
 import CursorController, { CursorMode } from "./cursor-controller.class";
 
 function canvasBoxToInitialTranslate(canvasElement: HTMLCanvasElement) {
   const { width, height } = canvasElement.getBoundingClientRect();
+  const originX = width / 2;
+  const originY = height / 2;
 
   const widthByHeight = (height * 210) / 297;
   if (widthByHeight < width) {
-    const targetX = (width - widthByHeight) / 2;
     const scale = (widthByHeight * 100) / 2100;
-    return [targetX, 0, scale];
+    const targetX = (width - widthByHeight) / 2;
+    const targetY = height / 2;
+    return [-targetX, -targetY, scale, originX, originY];
   }
 
   const heightByWidth = (width * 297) / 210;
   const targetY = (height - heightByWidth) / 2;
   const scale = (heightByWidth * 100) / 2970;
-  return [0, targetY, scale];
+  return [0, 0, scale, originX, originY];
 }
 
 class StandManipulator {
   private translation = { x: 0, y: 0 };
   private scale = 20;
+  private origin = { x: 0, y: 0 };
   private _renderFunction?: VoidFunction;
   private isDraggingStart = false;
 
-  constructor(private canvasElement: HTMLCanvasElement, cursorController: CursorController) {
+  constructor(
+    private canvasElement: HTMLCanvasElement,
+    cursorController: CursorController,
+  ) {
     this.setDefaultTranslating();
     canvasElement.addEventListener("mousedown", (event) => {
       event.preventDefault();
@@ -53,11 +65,11 @@ class StandManipulator {
       } else {
         this.translate(-event.deltaX, -event.deltaY);
       }
-    }
+    };
 
     const wheelScaleHandler = (event: WheelEvent) => {
       this.setScale(event.deltaY * -0.01);
-    }
+    };
 
     canvasElement.addEventListener("wheel", (event) => {
       event.preventDefault();
@@ -72,9 +84,10 @@ class StandManipulator {
   }
 
   public setDefaultTranslating() {
-    const [x, y, scale] = canvasBoxToInitialTranslate(this.canvasElement);
+    const [x, y, scale, originX, originY] = canvasBoxToInitialTranslate(this.canvasElement);
     this.translation = { x, y };
     this.scale = scale;
+    this.origin = { x: originX, y: originY };
     this._renderFunction?.();
   }
 
@@ -88,17 +101,33 @@ class StandManipulator {
     if (newScale < 0 && this.scale < 4) return;
 
     this.scale += newScale;
-    this.translation.x -= 10 * newScale;
-    this.translation.y -= 10 * newScale;
     this._renderFunction?.();
   }
 
+  /** Not calls render */
+  public setOrigin(x: number, y: number) {
+    this.origin.x += x;
+    this.origin.y += y;
+  }
+
   get matrix() {
-    const { x, y } = this.translation;
-    const translationMatrix = getTranslationMatrix(x, y);
+    const displacementOriginMatrix = getTranslationMatrix(
+      this.origin.x,
+      this.origin.y,
+    );
+    const translationMatrix = getTranslationMatrix(
+      this.translation.x,
+      this.translation.y,
+    );
     const normalScale = this.scale * 0.01;
     const scaleMatrix = getScaleMatrix(normalScale, normalScale);
-    return multiply(translationMatrix, scaleMatrix);
+
+    let matrix = project(this.canvasElement.width, this.canvasElement.height);
+    matrix = multiply(matrix, displacementOriginMatrix);
+    matrix = multiply(matrix, translationMatrix);
+    matrix = multiply(matrix, scaleMatrix);
+    
+    return matrix;
   }
 }
 

@@ -64,6 +64,19 @@ export function addition(firstAddend: Matrix3x3, secondAddend: Matrix3x3): Matri
   ]
 }
 
+/**
+ * Make a projection by width/height
+ *
+ * Note: This matrix flips the Y axis so that 0 is at the top.
+ */
+export function project(width: number, height: number): Matrix3x3 {
+  return [
+    2 / width, 0, 0,
+    0, -2 / height, 0,
+    -1, 1, 1
+  ]
+}
+
 export function getTranslationMatrix(tx: number, ty: number): Matrix3x3 {
   return [
     1, 0, 0,

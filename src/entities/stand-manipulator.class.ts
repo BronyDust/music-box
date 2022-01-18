@@ -1,3 +1,4 @@
+import { getScaleMatrix, getTranslationMatrix, multiply } from "../renderer/utils/matrix-math";
 import CursorController, { CursorMode } from "./cursor-controller.class";
 
 function canvasBoxToInitialTranslate(canvasElement: HTMLCanvasElement) {
@@ -92,12 +93,12 @@ class StandManipulator {
     this._renderFunction?.();
   }
 
-  get transformMatrix(): [number, number] {
-    return [this.translation.x, this.translation.y];
-  }
-
-  get scaleMatrix(): [number, number] {
-    return [this.scale, this.scale];
+  get matrix() {
+    const { x, y } = this.translation;
+    const translationMatrix = getTranslationMatrix(x, y);
+    const normalScale = this.scale * 0.01;
+    const scaleMatrix = getScaleMatrix(normalScale, normalScale);
+    return multiply(translationMatrix, scaleMatrix);
   }
 }
 

@@ -37,6 +37,33 @@ export function multiply(multiplier: Matrix3x3, multiplicand: Matrix3x3): Matrix
   ]
 }
 
+export function addition(firstAddend: Matrix3x3, secondAddend: Matrix3x3): Matrix3x3 {
+  const a00 = firstAddend[0];
+  const a01 = firstAddend[1];
+  const a02 = firstAddend[2];
+  const a10 = firstAddend[3];
+  const a11 = firstAddend[4];
+  const a12 = firstAddend[5];
+  const a20 = firstAddend[6];
+  const a21 = firstAddend[7];
+  const a22 = firstAddend[8];
+  const b00 = secondAddend[0];
+  const b01 = secondAddend[1];
+  const b02 = secondAddend[2];
+  const b10 = secondAddend[3];
+  const b11 = secondAddend[4];
+  const b12 = secondAddend[5];
+  const b20 = secondAddend[6];
+  const b21 = secondAddend[7];
+  const b22 = secondAddend[8];
+
+  return [
+    a00 + b00, a01 + b01, a02 + b02,
+    a10 + b10, a11 + b11, a12 + b12,
+    a20 + b20, a21 + b21, a22 + b22,
+  ]
+}
+
 export function getTranslationMatrix(tx: number, ty: number): Matrix3x3 {
   return [
     1, 0, 0,
@@ -50,5 +77,13 @@ export function getScaleMatrix(sx: number, sy: number): Matrix3x3 {
     sx, 0, 0,
     0, sy, 0,
     0, 0, 1
+  ]
+}
+
+export function getFullMatrix(tx: number, ty: number, sx: number, sy: number): Matrix3x3 {
+  return [
+    sx, 0, 0,
+    0, sy, 0,
+    tx, ty, 1
   ]
 }

@@ -2,13 +2,13 @@ import compileShader from "./utils/compile-shader";
 import vertexSource from "./vertex.glsl";
 import fragmentSource from "./fragment.glsl";
 import webglProgram from "./utils/webgl-program";
+import { Matrix3x3 } from "./utils/matrix-math";
 
 class Renderer {
   private positionAttributeLocation: number;
   private resolutionUniformLocation: WebGLUniformLocation;
   private colorUniformLocation: WebGLUniformLocation;
-  private translateUniformLocation: WebGLUniformLocation;
-  private scaleUniformLocation: WebGLUniformLocation;
+  private transformMatrixUniformLocation: WebGLUniformLocation;
 
   /**
    * Fill buffer data
@@ -52,20 +52,11 @@ class Renderer {
     if (!resolutionUniformLocation)
       throw new Error('FATAL: cannot find "user_resolution" uniform location');
     this.resolutionUniformLocation = resolutionUniformLocation;
-    const translateUniformLocation = context.getUniformLocation(
-      program,
-      "user_translation",
-    );
-    if (!translateUniformLocation)
-      throw new Error('FATAL: cannot find "user_translation" uniform location');
-    this.translateUniformLocation = translateUniformLocation;
-    const scaleUniformLocation = context.getUniformLocation(
-      program,
-      "user_scale",
-    );
-    if (!scaleUniformLocation)
-      throw new Error('FATAL: cannot find "user_scale" uniform location');
-    this.scaleUniformLocation = scaleUniformLocation;
+    const transformMatrixUniformLocation = context.getUniformLocation(program, 'user_matrix');
+    if (!transformMatrixUniformLocation)
+      throw new Error('FATAL: cannot find "user_matrix" uniform location');
+    this.transformMatrixUniformLocation = transformMatrixUniformLocation;
+
     const colorUniformLocation = context.getUniformLocation(
       program,
       "user_color",
@@ -130,12 +121,8 @@ class Renderer {
     );
   }
 
-  public setTranslation(translate: [number, number]) {
-    this.context.uniform2fv(this.translateUniformLocation, translate);
-  }
-
-  public setScale(scale: [number, number]) {
-    this.context.uniform2fv(this.scaleUniformLocation, scale);
+  public setMatrix(matrix: Matrix3x3) {
+    this.context.uniformMatrix3fv(this.transformMatrixUniformLocation, false, matrix);
   }
 
   public renderTriangles(coords: number[]) {

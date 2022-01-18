@@ -42,14 +42,12 @@ function initialize() {
     canvasContext.viewport(0, 0, width, height);
 
     renderer.provideResolutionToShader();
-    renderer.setScale(standManipulator.scaleMatrix);
-    renderer.setTranslation(standManipulator.transformMatrix);
+    renderer.setMatrix(standManipulator.matrix);
     renderTree.render();
   };
 
   standManipulator.renderFunction = () => {
-    renderer.setScale(standManipulator.scaleMatrix);
-    renderer.setTranslation(standManipulator.transformMatrix);
+    renderer.setMatrix(standManipulator.matrix);
     renderTree.render();
   };
 
@@ -63,8 +61,11 @@ function initialize() {
     event.preventDefault();
 
     const { pageX, pageY } = event;
-    const [ transformX, transformY ] = standManipulator.transformMatrix;
-    const [ scaleX, scaleY ] = standManipulator.scaleMatrix;
+    const [
+      scaleX,,,
+      , scaleY,,
+      transformX, transformY
+    ] = standManipulator.matrix;
 
     renderTree.select((pageX - transformX) / scaleX * 100, (pageY - transformY) / scaleY * 100);
     renderTree.render();

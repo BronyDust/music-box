@@ -2,7 +2,6 @@ import compileShader from "./utils/compile-shader";
 import vertexSource from "./vertex.glsl";
 import fragmentSource from "./fragment.glsl";
 import webglProgram from "./utils/webgl-program";
-import Canvas from "../agents/canvas.class";
 
 class Renderer {
   private positionAttributeLocation: number;
